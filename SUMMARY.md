@@ -29,4 +29,5 @@
 * [CountDownLatch](duo-xian-cheng-jin-jie/countdownlatch.md)
 * [Java8中的并行计算](duo-xian-cheng-jin-jie/java-8-stream-bing-hang-ji-suan.md)
 * [ThreadLocal](duo-xian-cheng-jin-jie/threadlocal.md)
+* [Future及其扩展](duo-xian-cheng-jin-jie/future-ji-qi-kuo-zhan.md)
 
