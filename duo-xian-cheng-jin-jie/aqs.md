@@ -211,6 +211,8 @@ final boolean acquireQueued(final Node node, int arg) {
 
 总结起来的一个流程图：
 
+![](https://img-blog.csdnimg.cn/20200417103418684.jpg?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3dhbmdjaGVuZ21pbmcx,size_16,color_FFFFFF,t_70)
+
  **释放资源**
 
 释放资源相比于获取资源来说，会简单许多。在AQS中只有一小段实现。源码：
