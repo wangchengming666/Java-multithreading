@@ -27,7 +27,8 @@ protected final int getState() {
 protected final void setState(int newState) {
     state = newState;
 }
-    
+
+// 原子的（CAS操作）将同步状态值设置为给定值update如果当前同步状态的值等于expect（期望值）   
 protected final boolean compareAndSetState(int expect, int update) {
     // See below for intrinsics setup to support this
     return unsafe.compareAndSwapInt(this, stateOffset, expect, update);
