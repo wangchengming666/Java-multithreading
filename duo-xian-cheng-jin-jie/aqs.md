@@ -12,12 +12,21 @@
 
 AQS的数据结构
 
-AQS内部使用了一个volatile的变量state来作为资源的标识。同时定义了几个获取和改版state的protected方法，子类可以覆盖这些方法来实现自己的逻辑：
+AQS内部使用了一个volatile的变量state来作为资源的标识。同时定义了几个获取和修改state的protected方法，子类可以覆盖这些方法来实现自己的逻辑：
 
 ```text
-getState()
-setState()
-compareAndSetState()
+protected final int getState() {
+    return state;
+}
+    
+protected final void setState(int newState) {
+    state = newState;
+}
+    
+protected final boolean compareAndSetState(int expect, int update) {
+    // See below for intrinsics setup to support this
+    return unsafe.compareAndSwapInt(this, stateOffset, expect, update);
+}
 ```
 
 这三种叫做均是原子操作，其中compareAndSetState的实现依赖于Unsafe的compareAndSwapInt\(\)方法。
