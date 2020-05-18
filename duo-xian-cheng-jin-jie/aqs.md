@@ -39,7 +39,7 @@ protected final boolean compareAndSetState(int expect, int update) {
 
 而AQS类本身实现的是一些排队和阻塞的机制，比如具体线程等待队列的维护（如获取资源失败入队/唤醒出队等）。它内部使用了一个先进先出（FIFO）的双端队列，并使用了两个指针head和tail用于标识队列的头部和尾部。其数据结构如图：
 
-![](http://concurrent.redspider.group/article/02/imgs/AQS%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84.png)
+![](../.gitbook/assets/aqs-shu-ju-jie-gou.png)
 
 但它并不是直接储存线程，而是储存拥有线程的Node节点。
 
@@ -225,10 +225,6 @@ final boolean acquireQueued(final Node node, int arg) {
 * acquireSharedInterruptibly：申请可中断的资源（共享模式）
 
 > 可中断的意思是，在线程中断时可能会抛出`InterruptedException`
-
-总结起来的一个流程图：
-
-![](https://img-blog.csdnimg.cn/20200417103418684.jpg?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3dhbmdjaGVuZ21pbmcx,size_16,color_FFFFFF,t_70)
 
  **释放资源**
 
