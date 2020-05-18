@@ -10,7 +10,7 @@
 
 那AQS有什么用呢？Java中的大部分同步类（Lock、Semaphore、ReentrantLock等）都是基于AbstractQueuedSynchronizer（简称为AQS）实现的。AQS是一种提供了原子式管理同步状态、阻塞和唤醒线程功能以及队列模型的简单框架。
 
-AQS的数据结构
+**AQS的数据结构**
 
 AQS内部使用了一个volatile的变量state来作为资源的标识。同时定义了几个获取和修改state的protected方法，子类可以覆盖这些方法来实现自己的逻辑：
 
