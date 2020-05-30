@@ -84,19 +84,19 @@ public ThreadPoolExecutor(int corePoolSize,
 
   > 常用的几个阻塞队列：
   >
-  > * LinkedBlockingQueue
+  >    1. LinkedBlockingQueue
   >
   > 链式阻塞队列，底层数据结构是链表，默认大小是Integer.MAX\_VALUE，也可以指定大小。
   >
-  > * ArrayBlockingQueue
+  >    2. ArrayBlockingQueue
   >
   > 数组阻塞队列，底层数据结构是数组，需要指定队列的大小。
   >
-  > * SynchronousQueue
+  >    3. SynchronousQueue
   >
   > 同步队列，内部容量为0，每个put操作必须等待一个take操作，反之亦然。
   >
-  > * DelayQueue
+  >    4. DelayQueue
   >
   > 延迟队列，该队列中的元素只有当其指定的延迟时间到了，才能够从队列中获取到该元素 。
 
