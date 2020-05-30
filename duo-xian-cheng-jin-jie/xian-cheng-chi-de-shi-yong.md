@@ -150,35 +150,102 @@ public interface RejectedExecutionHandler {
 }
 ```
 
-通过源码可以看到，线程池一共有四种拒绝策略，如下图所示  
-
-![](https://img-blog.csdnimg.cn/20200530224546771.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3dhbmdjaGVuZ21pbmcx,size_16,color_FFFFFF,t_70)
-
-`AbortPolicy`是线程池的默认决绝策略，丢弃任务并抛出`RejectedExecutionException`异常。
+通过源码可以看到，线程池一共有四种拒绝策略，如下图所示 ![&#x5728;&#x8FD9;&#x91CC;&#x63D2;&#x5165;&#x56FE;&#x7247;&#x63CF;&#x8FF0;](https://img-blog.csdnimg.cn/20200530224546771.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3dhbmdjaGVuZ21pbmcx,size_16,color_FFFFFF,t_70) `AbortPolicy`是线程池的默认决绝策略，丢弃任务并抛出`RejectedExecutionException`异常。
 
 ```text
-    public static class AbortPolicy implements RejectedExecutionHandler {
-        /**
-         * Creates an {@code AbortPolicy}.
-         */
-        public AbortPolicy() { }
+public static class AbortPolicy implements RejectedExecutionHandler {
+    /**
+     * Creates an {@code AbortPolicy}.
+     */
+    public AbortPolicy() { }
 
-        /**
-         * Always throws RejectedExecutionException.
-         *
-         * @param r the runnable task requested to be executed
-         * @param e the executor attempting to execute this task
-         * @throws RejectedExecutionException always
-         */
-        public void rejectedExecution(Runnable r, ThreadPoolExecutor e) {
-            throw new RejectedExecutionException("Task " + r.toString() +
-                                                 " rejected from " +
-                                                 e.toString());
-        }
+    /**
+     * Always throws RejectedExecutionException.
+     *
+     * @param r the runnable task requested to be executed
+     * @param e the executor attempting to execute this task
+     * @throws RejectedExecutionException always
+     */
+    public void rejectedExecution(Runnable r, ThreadPoolExecutor e) {
+        throw new RejectedExecutionException("Task " + r.toString() +
+                                             " rejected from " +
+                                             e.toString());
     }
+}
 ```
 
-**线程池如何实现复用**
+`DiscardPolicy`的策略是丢弃任务，但是不抛出异常。
+
+```text
+public static class DiscardPolicy implements RejectedExecutionHandler {
+    /**
+     * Creates a {@code DiscardPolicy}.
+     */
+    public DiscardPolicy() { }
+
+    /**
+     * Does nothing, which has the effect of discarding task r.
+     *
+     * @param r the runnable task requested to be executed
+     * @param e the executor attempting to execute this task
+     */
+    public void rejectedExecution(Runnable r, ThreadPoolExecutor e) {
+    }
+}
+```
+
+`DiscardOldestPolicy`的策略是丢弃队列最前面的任务，然后重新尝试执行任务并重复此过程。
+
+```text
+public static class DiscardOldestPolicy implements RejectedExecutionHandler {
+    /**
+     * Creates a {@code DiscardOldestPolicy} for the given executor.
+     */
+    public DiscardOldestPolicy() { }
+
+    /**
+     * Obtains and ignores the next task that the executor
+     * would otherwise execute, if one is immediately available,
+     * and then retries execution of task r, unless the executor
+     * is shut down, in which case task r is instead discarded.
+     *
+     * @param r the runnable task requested to be executed
+     * @param e the executor attempting to execute this task
+     */
+    public void rejectedExecution(Runnable r, ThreadPoolExecutor e) {
+        if (!e.isShutdown()) {
+            e.getQueue().poll();
+            e.execute(r);
+        }
+    }
+}
+```
+
+`CallerRunsPolicy`的策略是由调用线程处理该任务。
+
+```text
+public static class CallerRunsPolicy implements RejectedExecutionHandler {
+    /**
+     * Creates a {@code CallerRunsPolicy}.
+     */
+    public CallerRunsPolicy() { }
+
+    /**
+     * Executes task r in the caller's thread, unless the executor
+     * has been shut down, in which case the task is discarded.
+     *
+     * @param r the runnable task requested to be executed
+     * @param e the executor attempting to execute this task
+     */
+    public void rejectedExecution(Runnable r, ThreadPoolExecutor e) {
+        if (!e.isShutdown()) {
+            r.run();
+        }
+    }
+}
+```
+
+* **线程池如何实现复用**
 
 线程重用的核心是，我们知道，**Thread.start\(\)只能调用一次，一旦这个调用结束，则该线程就到了stop状态，不能再次调用start。**
 
