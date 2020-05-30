@@ -66,38 +66,39 @@ public ThreadPoolExecutor(int corePoolSize,
 ```
 
 * 关于构造函数的参数的含义
+
   * int corePoolSize：该线程池中核心线程数最大值
 
-> 核心线程：线程池中有两类线程，核心线程和非核心线程。核心线程默认情况下会一直存在于线程池中，即使这个核心线程什么都不干（铁饭碗），而非核心线程如果长时间的闲置，就会被销毁（临时工）。
+  核心线程：线程池中有两类线程，核心线程和非核心线程。核心线程默认情况下会一直存在于线程池中，即使这个核心线程什么都不干（铁饭碗），而非核心线程如果长时间的闲置，就会被销毁（临时工）。
 
-* int maximumPoolSize：该线程池中线程总数最大值 。
+  * int maximumPoolSize：该线程池中线程总数最大值 。
 
-> 该值等于核心线程数量 + 非核心线程数量。
+  该值等于核心线程数量 + 非核心线程数量。
 
-* long keepAliveTime：非核心线程闲置超时时长。
+  * long keepAliveTime：非核心线程闲置超时时长。
 
-> 非核心线程如果处于闲置状态超过该值，就会被销毁。如果设置allowCoreThreadTimeOut\(true\)，则会也作用于核心线程。
+  非核心线程如果处于闲置状态超过该值，就会被销毁。如果设置allowCoreThreadTimeOut\(true\)，则会也作用于核心线程。
 
-* TimeUnit unit：keepAliveTime的单位。
-* BlockingQueue workQueue：阻塞队列，维护着等待执行的Runnable任务对象。
+  * TimeUnit unit：keepAliveTime的单位。
+  * BlockingQueue workQueue：阻塞队列，维护着等待执行的Runnable任务对象。
 
-> 常用的几个阻塞队列：
->
-> 1. LinkedBlockingQueue
->
-> 链式阻塞队列，底层数据结构是链表，默认大小是Integer.MAX\_VALUE，也可以指定大小。
->
-> 1. ArrayBlockingQueue
->
-> 数组阻塞队列，底层数据结构是数组，需要指定队列的大小。
->
-> 1. SynchronousQueue
->
-> 同步队列，内部容量为0，每个put操作必须等待一个take操作，反之亦然。
->
-> 1. DelayQueue
->
-> 延迟队列，该队列中的元素只有当其指定的延迟时间到了，才能够从队列中获取到该元素 。
+  > 常用的几个阻塞队列：
+  >
+  > 1. LinkedBlockingQueue
+  >
+  > 链式阻塞队列，底层数据结构是链表，默认大小是Integer.MAX\_VALUE，也可以指定大小。
+  >
+  > 1. ArrayBlockingQueue
+  >
+  > 数组阻塞队列，底层数据结构是数组，需要指定队列的大小。
+  >
+  > 1. SynchronousQueue
+  >
+  > 同步队列，内部容量为0，每个put操作必须等待一个take操作，反之亦然。
+  >
+  > 1. DelayQueue
+  >
+  > 延迟队列，该队列中的元素只有当其指定的延迟时间到了，才能够从队列中获取到该元素 。
 
 线程池主要的任务处理流程
 
