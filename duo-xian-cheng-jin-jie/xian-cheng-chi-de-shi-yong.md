@@ -65,9 +65,8 @@ public ThreadPoolExecutor(int corePoolSize,
                           RejectedExecutionHandler handler)
 ```
 
-关于构造函数的参数的含义
-
-* int corePoolSize：该线程池中核心线程数最大值
+* 关于构造函数的参数的含义
+  * int corePoolSize：该线程池中核心线程数最大值
 
 > 核心线程：线程池中有两类线程，核心线程和非核心线程。核心线程默认情况下会一直存在于线程池中，即使这个核心线程什么都不干（铁饭碗），而非核心线程如果长时间的闲置，就会被销毁（临时工）。
 
