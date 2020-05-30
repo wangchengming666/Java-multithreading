@@ -154,7 +154,7 @@ public interface RejectedExecutionHandler {
 
 ![](https://img-blog.csdnimg.cn/20200530224546771.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3dhbmdjaGVuZ21pbmcx,size_16,color_FFFFFF,t_70)
 
-`AbortPolicy`是线程池的默认决绝策略，丢弃任务并抛出`RejectedExecutionException`异常。
+`ThreadPoolExecutor.AbortPolicy`是线程池的默认决绝策略，丢弃任务并抛出`RejectedExecutionException`异常。
 
 ```text
 public static class AbortPolicy implements RejectedExecutionHandler {
@@ -178,7 +178,7 @@ public static class AbortPolicy implements RejectedExecutionHandler {
 }
 ```
 
-`DiscardPolicy`的策略是丢弃任务，但是不抛出异常。
+`ThreadPoolExecutor.DiscardPolicy`的策略是丢弃任务，但是不抛出异常。
 
 ```text
 public static class DiscardPolicy implements RejectedExecutionHandler {
@@ -198,7 +198,7 @@ public static class DiscardPolicy implements RejectedExecutionHandler {
 }
 ```
 
-`DiscardOldestPolicy`的策略是丢弃队列最前面的任务，然后重新尝试执行任务并重复此过程。
+`ThreadPoolExecutor.DiscardOldestPolicy`的策略是丢弃队列最前面的任务，然后重新尝试执行任务并重复此过程。
 
 ```text
 public static class DiscardOldestPolicy implements RejectedExecutionHandler {
@@ -225,7 +225,7 @@ public static class DiscardOldestPolicy implements RejectedExecutionHandler {
 }
 ```
 
-`CallerRunsPolicy`的策略是由调用线程处理该任务。
+`ThreadPoolExecutor.CallerRunsPolicy`的策略是由调用线程处理该任务。
 
 ```text
 public static class CallerRunsPolicy implements RejectedExecutionHandler {
