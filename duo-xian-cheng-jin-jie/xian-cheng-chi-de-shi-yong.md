@@ -139,7 +139,44 @@ public void execute(Runnable command) {
 3. 当缓存队列满了，说明这个时候任务已经多到爆棚，需要一些“临时工”来执行这些任务了。于是会创建非核心线程去执行这个任务。注意，这一步需要获得全局锁。
 4. 缓存队列满了， 且总线程数达到了maximumPoolSize，则会采取上面提到的拒绝策略进行处理。
 
-* 线程池的四种拒绝策略
+* 线程池四种拒绝策略
+
+当线程池的任务缓存队列已满并且线程池中的线程数目达到maximumPoolSize，如果还有任务到来 就会采取任务拒绝策略。`RejectedExecutionHandler`接口定义如下
+
+```text
+public interface RejectedExecutionHandler {
+
+    void rejectedExecution(Runnable r, ThreadPoolExecutor executor);
+}
+```
+
+通过源码可以看到，线程池一共有四种拒绝策略，如下图所示  
+
+![](https://img-blog.csdnimg.cn/20200530224546771.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3dhbmdjaGVuZ21pbmcx,size_16,color_FFFFFF,t_70)
+
+`AbortPolicy`是线程池的默认决绝策略，丢弃任务并抛出`RejectedExecutionException`异常。
+
+```text
+    public static class AbortPolicy implements RejectedExecutionHandler {
+        /**
+         * Creates an {@code AbortPolicy}.
+         */
+        public AbortPolicy() { }
+
+        /**
+         * Always throws RejectedExecutionException.
+         *
+         * @param r the runnable task requested to be executed
+         * @param e the executor attempting to execute this task
+         * @throws RejectedExecutionException always
+         */
+        public void rejectedExecution(Runnable r, ThreadPoolExecutor e) {
+            throw new RejectedExecutionException("Task " + r.toString() +
+                                                 " rejected from " +
+                                                 e.toString());
+        }
+    }
+```
 
 **线程池如何实现复用**
 
