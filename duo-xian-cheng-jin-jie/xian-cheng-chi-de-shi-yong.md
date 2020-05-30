@@ -67,18 +67,9 @@ public ThreadPoolExecutor(int corePoolSize,
 
 * 关于构造函数的参数的含义
 
-  * **int corePoolSize**：该线程池中核心线程数最大值
-
-  线程池中有两类线程，核心线程和非核心线程。核心线程默认情况下会一直存在于线程池中，即使这个核心线程什么都不干（铁饭碗），而非核心线程如果长时间的闲置，就会被销毁（临时工）。
-
-  * **int maximumPoolSize**：该线程池中线程总数最大值 。
-
-  该值等于核心线程数量 + 非核心线程数量。
-
-  * **long keepAliveTime**：非核心线程闲置超时时长。
-
-  非核心线程如果处于闲置状态超过该值，就会被销毁。如果设置allowCoreThreadTimeOut\(true\)，则会也作用于核心线程。
-
+  * **int corePoolSize**：该线程池中核心线程数最大值。线程池中有两类线程，核心线程和非核心线程。核心线程默认情况下会一直存在于线程池中，即使这个核心线程什么都不干（铁饭碗），而非核心线程如果长时间的闲置，就会被销毁（临时工）。
+  * **int maximumPoolSize**：该线程池中线程总数最大值 。该值等于核心线程数量 + 非核心线程数量。
+  * **long keepAliveTime**：非核心线程闲置超时时长。非核心线程如果处于闲置状态超过该值，就会被销毁。
   * **TimeUnit unit**：keepAliveTime的单位。
   * **BlockingQueue workQueue**：阻塞队列，维护着等待执行的Runnable任务对象。
 
