@@ -242,7 +242,7 @@ public static class CallerRunsPolicy implements RejectedExecutionHandler {
 
 * **线程池如何实现复用**
 
-ThreadPoolExecutor在创建线程时，会将线程封装成**工作线程worker**,并放入**工作线程组**中，然后这个worker反复从阻塞队列中拿任务去执行。
+ThreadPoolExecutor在创建线程时，会将线程封装成**工作线程worker，**并放入**工作线程组**中，然后这个worker反复从阻塞队列中拿任务去执行。
 
 简单的说，线程池就是一组工人，任务是放在队列Queue里，一共就这么几个工人，当有空闲的工人，就会去队列里领取下一个任务，所以通过这种手段限制的总工人（线程）数量，即为复用。接下来我们通过源码来分析一下线程池复用的原理。
 
