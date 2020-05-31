@@ -101,7 +101,7 @@ public void execute(Runnable command) {
         throw new NullPointerException(); 
     // clt 记录着runState workerCount  
     int c = ctl.get();
-    // 1.当前线程数小于corePoolSize,则调用addWorker创建核心线程执行任务
+    // 1.当前线程数小于corePoolSize，则调用addWorker创建核心线程执行任务
     if (workerCountOf(c) < corePoolSize) {
        if (addWorker(command, true))
            return;
