@@ -241,13 +241,118 @@ public static class CallerRunsPolicy implements RejectedExecutionHandler {
 }
 ```
 
-* **线程池如何实现复用**
+**线程池如何实现复用**
 
-ThreadPoolExecutor在创建线程时，会将线程封装成**工作线程worker，**并放入**工作线程组**中，然后这个worker反复从阻塞队列中拿任务去执行。
+可以先看一下线程池复用的流程图，接下来我们通过源码对线程复用的原理做详细的分析。 
+
+![](https://img-blog.csdnimg.cn/20200531134819427.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3dhbmdjaGVuZ21pbmcx,size_16,color_FFFFFF,t_70)
+
+ThreadPoolExecutor在创建线程时，会将线程封装成工作线程worker，并放入工作线程组中，然后这个worker反复从阻塞队列中拿任务去执行。
 
 简单的说，线程池就是一组工人，任务是放在队列Queue里，一共就这么几个工人，当有空闲的工人，就会去队列里领取下一个任务，所以通过这种手段限制的总工人（线程）数量，即为复用。接下来我们通过源码来分析一下线程池复用的原理。
 
+首先看一下`ThreadPoolExecutor.addWorker`
 
+```text
+private boolean addWorker(Runnable firstTask, boolean core) {
+    //...这里有一段CAS代码，通过双重循环目的是通过CAS增加线程池线程个数
+    boolean workerStarted = false;
+    boolean workerAdded = false;
+    Worker w = null;
+    try {
+        w = new Worker(firstTask);
+        final Thread t = w.thread;
+        //...省略部分代码
+        workers.add(w);
+        //...省略部分代码
+        workerAdded = true;
+        if (workerAdded) {
+            t.start();
+            workerStarted = true;
+        }
+    }
+}
+```
+
+源代码比较长，这里省略了一部分。过程主要分成两步，第一步是一段CAS代码通过双重循环检查状态并为当前线程数扩容 +1，第二部是将任务包装成worker对象，用线程安全的方式添加到 HashSet\(\) 里，并开始执行线程。
+
+接下来看一下`Worker`的部分源码。`Worker`类实现了`Runnable`接口，所以`Worker`也是一个线程任务。在构造方法中，创建了一个线程，线程的任务就是自己。故`addWorker`方法中的`t.start`，会触发`Worker`类的run方法被JVM调用。
+
+```text
+private final class Worker extends AbstractQueuedSynchronizer implements Runnable{
+    final Thread thread;
+    Runnable firstTask;
+
+    Worker(Runnable firstTask) {
+        setState(-1); // inhibit interrupts until runWorker
+        this.firstTask = firstTask;
+        // 新建一个线程
+        this.thread = getThreadFactory().newThread(this);
+    }
+
+    public void run() {
+         runWorker(this);
+    }
+    //其余代码略...
+}
+```
+
+继续来看runWorker\(\)方法
+
+```text
+final void runWorker(Worker w) {
+    Thread wt = Thread.currentThread();
+    Runnable task = w.firstTask;
+    w.firstTask = null;
+    w.unlock(); // allow interrupts
+    boolean completedAbruptly = true;
+    //省略代码
+        while (task != null || (task = getTask()) != null) {
+            //省略代码
+            try {
+                beforeExecute(wt, task);
+                Throwable thrown = null;
+                try {
+                    task.run();
+                } catch (Exception x) {
+                    thrown = x; throw x;
+                }
+            //省略代码
+        }
+    //省略代码
+}
+```
+
+这里有一个大的while循环，当我们的task不为空的时候它就永远在循环，并且会源源不断的调用getTask\(\)来获取新的任务，然后调用task.run\(\)执行任务，从而达到复用线程的目的。
+
+继续跟踪getTask\(\)方法，这里主要是在workQueue中拉取任务
+
+```text
+private Runnable getTask() {
+    boolean timedOut = false; // Did the last poll() time out?
+
+    for (;;) {
+        //..省略
+
+        // Are workers subject to culling?
+        boolean timed = allowCoreThreadTimeOut || wc > corePoolSize;
+       //..省略
+
+        try {
+            Runnable r = timed ?
+                workQueue.poll(keepAliveTime, TimeUnit.NANOSECONDS) :
+                workQueue.take();
+            if (r != null)
+                return r;
+            timedOut = true;
+        } catch (InterruptedException retry) {
+            timedOut = false;
+        }
+    }
+}
+```
+
+以上源码就是线程池复用的整个流程。总结一下最核心的一点就是：新建一个Worker内部类就会建一个线程，并且会把这个内部类本身传进去当作任务去执行，这个内部类的run方法里实现了一个while循环，当任务队列没有任务时结束这个循环，则这个线程就结束。
 
 **常见的线程池**
 
