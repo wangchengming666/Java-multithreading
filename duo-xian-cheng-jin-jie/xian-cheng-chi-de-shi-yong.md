@@ -98,7 +98,8 @@ public ThreadPoolExecutor(int corePoolSize,
 ```text
 public void execute(Runnable command) {
     if (command == null)
-        throw new NullPointerException();   
+        throw new NullPointerException(); 
+    // clt 记录着runState workerCount  
     int c = ctl.get();
     // 1.当前线程数小于corePoolSize,则调用addWorker创建核心线程执行任务
     if (workerCountOf(c) < corePoolSize) {
