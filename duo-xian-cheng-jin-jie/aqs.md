@@ -39,7 +39,7 @@ protected final boolean compareAndSetState(int expect, int update) {
 
 而AQS类本身实现的是一些排队和阻塞的机制，比如具体线程等待队列的维护（如获取资源失败入队/唤醒出队等）。它内部使用了一个先进先出（FIFO）的双端队列，并使用了两个指针head和tail用于标识队列的头部和尾部。
 
-其核心思想是：
+其核心思想是：如果state是空闲的，就会有一个线程获取到state并将state设置为锁定状态，当其他的线程想要再次获取state的时候，就会被加入到队列中去
 
 其数据结构如图：
 
