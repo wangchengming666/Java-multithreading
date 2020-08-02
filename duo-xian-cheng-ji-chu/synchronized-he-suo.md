@@ -72,6 +72,8 @@ public void blockLock() {
 
 **synchronized实现的原理**
 
+synchronized是由JVM实现的一种互斥同步锁，如果你查看被synchronized修饰过的程序块编译后的字节码，你会发现生成了monitorenter和monitorexit两个字节码指令。当虚拟机执行到monitorenter指令时，首先要尝试获取对象的锁：**如果这个对象没有锁定，或者当前线程已经拥有了这个对象的锁，把锁的计数器+1；当执行monitorexit指令时，将锁的计数器-1；当计数器为0时，锁就被释放了**。
+
 这里借用方大大的文章，请移步[这里](https://www.infoq.cn/article/java-se-16-synchronized)
 
 **总结一下锁升级的过程**
