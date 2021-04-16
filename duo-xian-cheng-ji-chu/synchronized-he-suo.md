@@ -74,6 +74,10 @@ public void blockLock() {
 
 synchronized是由JVM实现的一种互斥同步锁，如果你查看被synchronized修饰过的程序块编译后的字节码，你会发现生成了monitorenter和monitorexit两个字节码指令。当虚拟机执行到monitorenter指令时，首先要尝试获取对象的锁：**如果这个对象没有锁定，或者当前线程已经拥有了这个对象的锁，把锁的计数器+1；当执行monitorexit指令时，将锁的计数器-1；当计数器为0时，锁就被释放了**。
 
+JVM规范规定JVM基于进入和退出 `Monitor` 对象来实现方法同步和代码块同步，但两者的实现细节不一样。代码块同步是使用`monitorenter`和`monitorexit`指令实现，而方法同步是使用另外一种方式实现的，细节在JVM规范里并没有详细说明，但是方法的同步同样可以使用这两个指令来实现。
+
+`monitorenter`指令是在编译后插入到同步代码块的开始位置，而`monitorexit`是插入到方法结束处和异常处，JVM要保证每个`monitorenter`必须有对应的`monitorexit`与之配对。任何对象都有一个`monitor`与之关联，当且一个`monitor`被持有后，它将处于锁定状态。线程执行到 `monitorenter` 指令时，将会尝试获取对象所对应的 `monitor` 的所有权，即尝试获得对象的锁。
+
 这里借用方大大的文章，请移步[这里](https://www.infoq.cn/article/java-se-16-synchronized)
 
 **总结一下锁升级的过程**
