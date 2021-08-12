@@ -5,7 +5,7 @@
 * 继承Thread类，并重写run方法（注意：Thread类实现了Runnable接口）
 
 ```text
-public class Thread implements Runnable { }
+public class Thread implements Runnable {}
 ```
 
 * 实现Runnable接口的run方法
