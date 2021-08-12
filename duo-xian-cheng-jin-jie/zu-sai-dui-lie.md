@@ -22,7 +22,7 @@ BlockingQueue一般用于生产者-消费者模式，生产者是往队列里添
 | 移除方法 | remove\(\) | poll\(\) | take\(\) | poll\(time,unit\) |
 | 检查方法 | element\(\) | peek\(\) | - | - |
 
-* 抛出异常：如果试图的操作无法立即执行，抛异常。当阻塞队列满时候，再往队列里插入元素，会抛出IllegalStateException\(“Queue full”\)异常。当队列为空时，从队列里获取元素时会抛出NoSuchElementException异常 。
+* 抛出异常：如果试图的操作无法立即执行，抛异常。当阻塞队列满时候，再往队列里插入元素，会抛出IllegalStateException\("Queue full"\)异常。当队列为空时，从队列里获取元素时会抛出NoSuchElementException异常 。
 * 返回特殊值：如果试图的操作无法立即执行，返回一个特殊值，通常是true / false。
 * 一直阻塞：如果试图的操作无法立即执行，则一直阻塞或者响应中断。
 * 超时退出：如果试图的操作无法立即执行，该方法调用将会发生阻塞，直到能够执行，但等待时间不会超过给定值。返回一个特定值以告知该操作是否成功，通常是 true / false。
