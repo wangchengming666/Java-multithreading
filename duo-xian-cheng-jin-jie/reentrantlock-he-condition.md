@@ -32,7 +32,7 @@ Java在`java.util.concurrent.locks`包下，还为我们提供了几个关于锁
 
 **ReentrantLock解读**
 
-ReentrantLock是一个非抽象类，它是Lock接口的JDK默认实现，实现了锁的基本功能。从名字上看，它是一个“可重入”锁，从源码上看，它内部有一个抽象类`Sync`，是继承了`AQS`，自己实现的一个同步器。同时，ReentrantLock内部有两个非抽象类NonfairSync和FairSync，它们都继承了Sync。从名字上看得出，分别是”非公平同步器“和”公平同步器“的意思。这意味着ReentrantLock可以支持”公平锁“和”非公平锁“。
+ReentrantLock是一个非抽象类，它是Lock接口的JDK默认实现，实现了锁的基本功能。从名字上看，它是一个"可重入"锁，从源码上看，它内部有一个抽象类`Sync`，是继承了`AQS`，自己实现的一个同步器。同时，ReentrantLock内部有两个非抽象类NonfairSync和FairSync，它们都继承了Sync。从名字上看得出，分别是”非公平同步器“和”公平同步器“的意思。这意味着ReentrantLock可以支持”公平锁“和”非公平锁“。
 
 通过看着两个同步器的源码可以发现，它们的实现都是”独占“的。都调用了AOS的setExclusiveOwnerThread方法，所以ReentrantLock的锁的”独占“的，也就是说，它的锁都是”排他锁“，不能共享。
 
