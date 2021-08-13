@@ -73,6 +73,8 @@ public ThreadPoolExecutor(int corePoolSize,
   * **TimeUnit unit**：keepAliveTime的单位。
   * **BlockingQueue workQueue**：阻塞队列，维护着等待执行的Runnable任务对象。
 
+
+
   > 常用的几个阻塞队列：
   >
   >    1. LinkedBlockingQueue
