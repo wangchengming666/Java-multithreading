@@ -12,15 +12,15 @@ CopyOnWrite容器即**写时复制的容器**,当我们往一个容器中添加�
 
 **CopyOnWriteArrayList**
 
-优点： CopyOnWriteArrayList经常被用于“读多写少”的并发场景，是因为CopyOnWriteArrayList无需任何同步措施，大大增强了读的性能。在Java中遍历线程非安全的List\(如：ArrayList和 LinkedList\)的时候，若中途有别的线程对List容器进行修改，那么会抛出ConcurrentModificationException异常。CopyOnWriteArrayList由于其"读写分离"，遍历和修改操作分别作用在不同的List容器，所以在使用迭代器遍历的时候，则不会抛出异常。
+优点： CopyOnWriteArrayList经常被用于“读多写少”的并发场景，是因为CopyOnWriteArrayList无需任何同步措施，大大增强了读的性能。在Java中遍历线程非安全的List(如：ArrayList和 LinkedList)的时候，若中途有别的线程对List容器进行修改，那么会抛出ConcurrentModificationException异常。CopyOnWriteArrayList由于其"读写分离"，遍历和修改操作分别作用在不同的List容器，所以在使用迭代器遍历的时候，则不会抛出异常。
 
 缺点： 第一个缺点是CopyOnWriteArrayList每次执行写操作都会将原容器进行拷贝了一份，数据量大的时候，内存会存在较大的压力，可能会引起频繁Full GC（ZGC因为没有使用Full GC）。比如这些对象占用的内存比较大200M左右，那么再写入100M数据进去，内存就会多占用300M。
 
 第二个缺点是CopyOnWriteArrayList由于实现的原因，写和读分别作用在不同新老容器上，在写操作执行过程中，读不会阻塞，但读取到的却是老容器的数据。
 
-现在我们来看一下CopyOnWriteArrayList的add操作源码，它的逻辑很清晰，就是先把原容器进行copy，然后在新的副本上进行“写操作”，最后再切换引用，在此过程中是加了锁的。
+现在我们来看一下CopyOnWriteArrayList的add操作源码，它的逻辑很清晰，就是先把原容器进行copy，然后在新的副本上进行"写操作"，最后再切换引用，在此过程中是加了锁的。
 
-```text
+```
 public boolean add(E e) {
 
     // ReentrantLock加锁，保证线程安全
@@ -45,7 +45,7 @@ public boolean add(E e) {
 
 我们再来看一下remove操作的源码，remove的逻辑是将要remove元素之外的其他元素拷贝到新的副本中，然后切换引用，再将原容器的引用指向新的副本中，因为remove操作也是“写操作”所以也是要加锁的。
 
-```text
+```
 public E remove(int index) {
 
         // 加锁
@@ -77,7 +77,7 @@ public E remove(int index) {
 
 我们再来看看CopyOnWriteArrayList效率最高的读操作的源码
 
-```text
+```
  public E get(int index) {
      return get(getArray(), index);
  }
@@ -94,4 +94,3 @@ public E remove(int index) {
 CopyOnWrite容器有数据一致性的问题，它只能保证最终数据一致性。
 
 所以如果我们希望写入的数据马上能准确地读取，请不要使用CopyOnWrite容器。
-
