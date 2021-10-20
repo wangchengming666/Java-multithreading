@@ -43,7 +43,7 @@ public boolean add(E e) {
 }
 ```
 
-我们再来看一下remove操作的源码，remove的逻辑是将要remove元素之外的其他元素拷贝到新的副本中，然后切换引用，再将原容器的引用指向新的副本中，因为remove操作也是“写操作”所以也是要加锁的。
+我们再来看一下remove操作的源码，remove的逻辑是将要remove元素之外的其他元素拷贝到新的副本中，然后切换引用，再将原容器的引用指向新的副本中，因为remove操作也是"写操作"所以也是要加锁的。
 
 ```
 public E remove(int index) {
