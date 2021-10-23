@@ -12,7 +12,7 @@ Java中的线程池顶层接口是`Executor`接口，`ThreadPoolExecutor`是这�
 
 * 我们先看一下`Executor`。
 
-```text
+```
 public interface Executor {
 
     /**
@@ -31,7 +31,7 @@ public interface Executor {
 
 * 我们再看看`ThreadPoolExecutor`类。构造函数如下：
 
-```text
+```
 // 五个参数的构造函数
 public ThreadPoolExecutor(int corePoolSize,
                           int maximumPoolSize,
@@ -65,39 +65,38 @@ public ThreadPoolExecutor(int corePoolSize,
                           RejectedExecutionHandler handler)
 ```
 
-* 关于构造函数的参数的含义
+*   关于构造函数的参数的含义
 
-  * **int corePoolSize**：该线程池中核心线程数最大值。线程池中有两类线程，核心线程和非核心线程。核心线程默认情况下会一直存在于线程池中，即使这个核心线程什么都不干（铁饭碗），而非核心线程如果长时间的闲置，就会被销毁（临时工）。
-  * **int maximumPoolSize**：该线程池中线程总数最大值 。该值等于核心线程数量 + 非核心线程数量。
-  * **long keepAliveTime**：非核心线程闲置超时时长。非核心线程如果处于闲置状态超过该值，就会被销毁。
-  * **TimeUnit unit**：keepAliveTime的单位。
-  * **BlockingQueue workQueue**：阻塞队列，维护着等待执行的Runnable任务对象。
+    * **int corePoolSize**：该线程池中核心线程数最大值。线程池中有两类线程，核心线程和非核心线程。核心线程默认情况下会一直存在于线程池中，即使这个核心线程什么都不干（铁饭碗），而非核心线程如果长时间的闲置，就会被销毁（临时工）。
+    * **int maximumPoolSize**：该线程池中线程总数最大值 。该值等于核心线程数量 + 非核心线程数量。
+    * **long keepAliveTime**：非核心线程闲置超时时长。非核心线程如果处于闲置状态超过该值，就会被销毁。
+    * **TimeUnit unit**：keepAliveTime的单位。
+    * **BlockingQueue workQueue**：阻塞队列，维护着等待执行的Runnable任务对象。
 
 
 
-  > 常用的几个阻塞队列：
-  >
-  >    1. LinkedBlockingQueue
-  >
-  > 链式阻塞队列，底层数据结构是链表，默认大小是Integer.MAX\_VALUE，也可以指定大小。
-  >
-  >    2. ArrayBlockingQueue
-  >
-  > 数组阻塞队列，底层数据结构是数组，需要指定队列的大小。
-  >
-  >    3. SynchronousQueue
-  >
-  > 同步队列，内部容量为0，每个put操作必须等待一个take操作，反之亦然。
-  >
-  >    4. DelayQueue
-  >
-  > 延迟队列，该队列中的元素只有当其指定的延迟时间到了，才能够从队列中获取到该元素 。
-
+    > 常用的几个阻塞队列：
+    >
+    > &#x20;  1\. LinkedBlockingQueue
+    >
+    > 链式阻塞队列，底层数据结构是链表，默认大小是`Integer.MAX_VALUE`，也可以指定大小。
+    >
+    > &#x20;  2\. ArrayBlockingQueue
+    >
+    > 数组阻塞队列，底层数据结构是数组，需要指定队列的大小。
+    >
+    > &#x20;  3\. SynchronousQueue
+    >
+    > 同步队列，内部容量为0，每个put操作必须等待一个take操作，反之亦然。
+    >
+    > &#x20;  4\. DelayQueue
+    >
+    > 延迟队列，该队列中的元素只有当其指定的延迟时间到了，才能够从队列中获取到该元素 。
 * 线程池主要的任务处理流程
 
 处理任务的核心方法是execute，我们看看 JDK 1.8 源码中ThreadPoolExecutor是如何处理线程任务的：
 
-```text
+```
 public void execute(Runnable command) {
     if (command == null)
         throw new NullPointerException(); 
@@ -128,8 +127,8 @@ public void execute(Runnable command) {
 
 总结一下处理流程
 
-1. 线程总数量 &lt; corePoolSize，无论线程是否空闲，都会新建一个核心线程执行任务（让核心线程数量快速达到corePoolSize，在核心线程数量 &lt; corePoolSize时）。注意，这一步需要获得全局锁。
-2. 线程总数量 &gt;= corePoolSize时，新来的线程任务会进入任务队列中等待，然后空闲的核心线程会依次去缓存队列中取任务来执行（体现了线程复用）。
+1. 线程总数量 < corePoolSize，无论线程是否空闲，都会新建一个核心线程执行任务（让核心线程数量快速达到corePoolSize，在核心线程数量 < corePoolSize时）。注意，这一步需要获得全局锁。
+2. 线程总数量 >= corePoolSize时，新来的线程任务会进入任务队列中等待，然后空闲的核心线程会依次去缓存队列中取任务来执行（体现了线程复用）。
 3. 当缓存队列满了，说明这个时候任务已经多到爆棚，需要一些“临时工”来执行这些任务了。于是会创建非核心线程去执行这个任务。注意，这一步需要获得全局锁。
 4. 缓存队列满了， 且总线程数达到了maximumPoolSize，则会采取拒绝策略进行处理。
 
@@ -137,20 +136,20 @@ public void execute(Runnable command) {
 
 当线程池的任务缓存队列已满并且线程池中的线程数目达到maximumPoolSize，如果还有任务到来 就会采取任务拒绝策略。`RejectedExecutionHandler`接口定义如下
 
-```text
+```
 public interface RejectedExecutionHandler {
 
     void rejectedExecution(Runnable r, ThreadPoolExecutor executor);
 }
 ```
 
-通过源码可以看到，线程池一共有四种拒绝策略，如下图所示  
+通过源码可以看到，线程池一共有四种拒绝策略，如下图所示 &#x20;
 
-![](https://img-blog.csdnimg.cn/20200530224546771.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3dhbmdjaGVuZ21pbmcx,size_16,color_FFFFFF,t_70)
+![](https://img-blog.csdnimg.cn/20200530224546771.png?x-oss-process=image/watermark,type\_ZmFuZ3poZW5naGVpdGk,shadow\_10,text\_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3dhbmdjaGVuZ21pbmcx,size\_16,color\_FFFFFF,t\_70)
 
 `ThreadPoolExecutor.AbortPolicy`是线程池的默认决绝策略，丢弃任务并抛出`RejectedExecutionException`异常。
 
-```text
+```
 public static class AbortPolicy implements RejectedExecutionHandler {
     /**
      * Creates an {@code AbortPolicy}.
@@ -174,7 +173,7 @@ public static class AbortPolicy implements RejectedExecutionHandler {
 
 `ThreadPoolExecutor.DiscardPolicy`的策略是丢弃任务，但是不抛出异常。
 
-```text
+```
 public static class DiscardPolicy implements RejectedExecutionHandler {
     /**
      * Creates a {@code DiscardPolicy}.
@@ -194,7 +193,7 @@ public static class DiscardPolicy implements RejectedExecutionHandler {
 
 `ThreadPoolExecutor.DiscardOldestPolicy`的策略是丢弃队列最前面的任务，然后重新尝试执行任务并重复此过程。
 
-```text
+```
 public static class DiscardOldestPolicy implements RejectedExecutionHandler {
     /**
      * Creates a {@code DiscardOldestPolicy} for the given executor.
@@ -221,7 +220,7 @@ public static class DiscardOldestPolicy implements RejectedExecutionHandler {
 
 `ThreadPoolExecutor.CallerRunsPolicy`的策略是由调用线程处理该任务。
 
-```text
+```
 public static class CallerRunsPolicy implements RejectedExecutionHandler {
     /**
      * Creates a {@code CallerRunsPolicy}.
@@ -245,9 +244,9 @@ public static class CallerRunsPolicy implements RejectedExecutionHandler {
 
 **线程池如何实现复用**
 
-可以先看一下线程池复用的流程图，接下来我们通过源码对线程复用的原理做详细的分析。 
+可以先看一下线程池复用的流程图，接下来我们通过源码对线程复用的原理做详细的分析。&#x20;
 
-![](https://img-blog.csdnimg.cn/20200531134819427.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3dhbmdjaGVuZ21pbmcx,size_16,color_FFFFFF,t_70)
+![](https://img-blog.csdnimg.cn/20200531134819427.png?x-oss-process=image/watermark,type\_ZmFuZ3poZW5naGVpdGk,shadow\_10,text\_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3dhbmdjaGVuZ21pbmcx,size\_16,color\_FFFFFF,t\_70)
 
 ThreadPoolExecutor在创建线程时，会将线程封装成工作线程worker，并放入工作线程组中，然后这个worker反复从阻塞队列中拿任务去执行。
 
@@ -255,7 +254,7 @@ ThreadPoolExecutor在创建线程时，会将线程封装成工作线程worker�
 
 首先看一下`ThreadPoolExecutor.addWorker`
 
-```text
+```
 private boolean addWorker(Runnable firstTask, boolean core) {
     //...这里有一段CAS代码，通过双重循环目的是通过CAS增加线程池线程个数
     boolean workerStarted = false;
@@ -276,11 +275,11 @@ private boolean addWorker(Runnable firstTask, boolean core) {
 }
 ```
 
-源代码比较长，这里省略了一部分。过程主要分成两步，第一步是一段CAS代码通过双重循环检查状态并为当前线程数扩容 +1，第二部是将任务包装成worker对象，用线程安全的方式添加到 HashSet\(\) 里，并开始执行线程。
+源代码比较长，这里省略了一部分。过程主要分成两步，第一步是一段CAS代码通过双重循环检查状态并为当前线程数扩容 +1，第二部是将任务包装成worker对象，用线程安全的方式添加到 HashSet() 里，并开始执行线程。
 
 接下来看一下`Worker`的部分源码。`Worker`类实现了`Runnable`接口，所以`Worker`也是一个线程任务。在构造方法中，创建了一个线程，线程的任务就是自己。故`addWorker`方法中的`t.start`，会触发`Worker`类的run方法被JVM调用。
 
-```text
+```
 private final class Worker extends AbstractQueuedSynchronizer implements Runnable{
     final Thread thread;
     Runnable firstTask;
@@ -299,9 +298,9 @@ private final class Worker extends AbstractQueuedSynchronizer implements Runnabl
 }
 ```
 
-继续来看runWorker\(\)方法
+继续来看runWorker()方法
 
-```text
+```
 final void runWorker(Worker w) {
     Thread wt = Thread.currentThread();
     Runnable task = w.firstTask;
@@ -325,11 +324,11 @@ final void runWorker(Worker w) {
 }
 ```
 
-这里有一个大的while循环，当我们的task不为空的时候它就永远在循环，并且会源源不断的调用getTask\(\)来获取新的任务，然后调用task.run\(\)执行任务，从而达到复用线程的目的。
+这里有一个大的while循环，当我们的task不为空的时候它就永远在循环，并且会源源不断的调用getTask()来获取新的任务，然后调用task.run()执行任务，从而达到复用线程的目的。
 
-继续跟踪getTask\(\)方法，这里主要是在workQueue中拉取任务
+继续跟踪getTask()方法，这里主要是在workQueue中拉取任务
 
-```text
+```
 private Runnable getTask() {
     boolean timedOut = false; // Did the last poll() time out?
 
@@ -360,7 +359,7 @@ private Runnable getTask() {
 
 * newSingleThreadExecutor
 
-```text
+```
 public static ExecutorService newSingleThreadExecutor() {
   return new FinalizableDelegatedExecutorService
       (new ThreadPoolExecutor(1, 1,
@@ -373,7 +372,7 @@ public static ExecutorService newSingleThreadExecutor() {
 
 * newFixedThreadPool
 
-```text
+```
 public static ExecutorService newFixedThreadPool(int nThreads) {
         return new ThreadPoolExecutor(nThreads, nThreads,
                                       0L, TimeUnit.MILLISECONDS,
@@ -385,7 +384,7 @@ public static ExecutorService newFixedThreadPool(int nThreads) {
 
 * newCachedThreadPool
 
-```text
+```
 public static ExecutorService newCachedThreadPool() {
     return new ThreadPoolExecutor(0, Integer.MAX_VALUE,
                                   60L, TimeUnit.SECONDS,
@@ -407,7 +406,7 @@ public static ExecutorService newCachedThreadPool() {
 
 创建一个定长线程池，支持定时及周期性任务执行。
 
-```text
+```
 public static ScheduledExecutorService newScheduledThreadPool(int corePoolSize) {
     return new ScheduledThreadPoolExecutor(corePoolSize);
 }
@@ -419,4 +418,3 @@ public ScheduledThreadPoolExecutor(int corePoolSize) {
           new DelayedWorkQueue());
 }
 ```
-

@@ -2,9 +2,9 @@
 
 今天这里主要介绍`CompetableFuture`类，因为它是JDK自带的，相比于RxJava项目来说也比较轻量。功能也比较齐全，基本上满足绝大多数的异步编程需求。
 
-先看一下使用线程池的submit方法是怎么写的，它底层是使用的`FutureTask：`
+先看一下使用线程池的submit方法是怎么写的，它底层是使用的`FutureTask`
 
-```text
+```
 // 定义一个线程池并让它执行一个异步任务
 ExecutorService executor = Executors.newCachedThreadPool();
 Future<Integer> result = executor.submit( () -> {
@@ -15,7 +15,7 @@ Future<Integer> result = executor.submit( () -> {
 
 然后取值的时候，有这样一些方式：
 
-```text
+```
 // 取值
 System.out.println(result.get()); // 阻塞
 System.out.println(result.get(3, TimeUnit.SECONDS)); // 阻塞至超时
@@ -31,7 +31,7 @@ for(;;) { // 自旋验证
 
 如果我们希望得到结果并把它打印出来，使用`CompetableFuture`可以这样做：
 
-```text
+```
 CompletableFuture<Integer> completableFuture = CompletableFuture.supplyAsync(() -> {
     try {
         TimeUnit.SECONDS.sleep(5);
@@ -52,9 +52,9 @@ CompletableFuture<Integer> completableFuture = CompletableFuture.supplyAsync(() 
 
 #### 创建异步任务
 
-`CompletableFuture` 提供了四个静态方法来创建一个异步任务。如果没有指定`Executor`的方法会使用ForkJoinPool.commonPool\(\) 作为它的线程池执行异步代码。如果指定线程池，则使用指定的线程池运行。以下所有的方法都类同。
+`CompletableFuture` 提供了四个静态方法来创建一个异步任务。如果没有指定`Executor`的方法会使用ForkJoinPool.commonPool() 作为它的线程池执行异步代码。如果指定线程池，则使用指定的线程池运行。以下所有的方法都类同。
 
-```text
+```
 public static CompletableFuture<Void> runAsync(Runnable runnable);
 public static CompletableFuture<Void> runAsync(Runnable runnable, Executor executor);
 public static <U> CompletableFuture<U> supplyAsync(Supplier<U> supplier);
@@ -69,7 +69,7 @@ public static CompletableFuture<Object> anyOf(CompletableFuture<?>... cfs);
 
 当`CompletableFuture`的计算结果完成，或者抛出异常的时候，可以执行特定的`Action`：
 
-```text
+```
 public CompletableFuture<T> whenComplete(BiConsumer<? super T,? super Throwable> action);
 public CompletableFuture<T> whenCompleteAsync(BiConsumer<? super T,? super Throwable> action);
 public CompletableFuture<T> whenCompleteAsync(BiConsumer<? super T,? super Throwable> action, Executor executor);
@@ -83,7 +83,7 @@ public CompletableFuture<T> exceptionally(Function<Throwable,? extends T> fn);
 
 `handle` 方法 跟 `whenComplete` 类似，但是返回的是一个`CompletionStage`。
 
-```text
+```
 public <U> CompletionStage<U> handle(BiFunction<? super T, Throwable, ? extends U> fn);
 public <U> CompletionStage<U> handleAsync(BiFunction<? super T, Throwable, ? extends U> fn);
 public <U> CompletionStage<U> handleAsync(BiFunction<? super T, Throwable, ? extends U> fn,Executor executor);
@@ -91,7 +91,7 @@ public <U> CompletionStage<U> handleAsync(BiFunction<? super T, Throwable, ? ext
 
 `thenAccept`方法跟 `handle` 方法类似，不过 `handle` 方法是有返回值的，如果我们只是消费任务完成的结果，**不需要返回值**，可以使用 `thenAccept` 方法：
 
-```text
+```
 public CompletionStage<Void> thenAccept(Consumer<? super T> action);
 public CompletionStage<Void> thenAcceptAsync(Consumer<? super T> action);
 public CompletionStage<Void> thenAcceptAsync(Consumer<? super T> action,Executor executor);
@@ -99,7 +99,7 @@ public CompletionStage<Void> thenAcceptAsync(Consumer<? super T> action,Executor
 
 `thenRun`跟 `thenAccept` 方法不一样的是，**不关心任务的处理结果**。只要上面的任务执行完成，就开始执行。
 
-```text
+```
 public CompletionStage<Void> thenRun(Runnable action);
 public CompletionStage<Void> thenRunAsync(Runnable action);
 public CompletionStage<Void> thenRunAsync(Runnable action,Executor executor);
@@ -109,7 +109,7 @@ public CompletionStage<Void> thenRunAsync(Runnable action,Executor executor);
 
 `thenCompose` 方法允许你对两个 `CompletionStage` 进行流水线操作，第一个操作完成时，将其结果作为参数传递给第二个操作。
 
-```text
+```
 public <U> CompletableFuture<U> thenCompose(Function<? super T, ? extends CompletionStage<U>> fn);
 public <U> CompletableFuture<U> thenComposeAsync(Function<? super T, ? extends CompletionStage<U>> fn);
 public <U> CompletableFuture<U> thenComposeAsync(Function<? super T, ? extends CompletionStage<U>> fn, Executor executor);
@@ -117,7 +117,7 @@ public <U> CompletableFuture<U> thenComposeAsync(Function<? super T, ? extends C
 
 当一个线程依赖另一个线程时，可以使用 `thenApply` 方法来把这两个线程**串行化**。
 
-```text
+```
 public <U> CompletableFuture<U> thenApply(Function<? super T,? extends U> fn);
 public <U> CompletableFuture<U> thenApplyAsync(Function<? super T,? extends U> fn);
 public <U> CompletableFuture<U> thenApplyAsync(Function<? super T,? extends U> fn, Executor executor);
@@ -131,7 +131,7 @@ public <U> CompletableFuture<U> thenApplyAsync(Function<? super T,? extends U> f
 
 `thenCombine` 会等两个 `CompletionStage` 的任务都执行完成后，把两个任务的结果合并到一块来处理。
 
-```text
+```
 public <U,V> CompletionStage<V> thenCombine(CompletionStage<? extends U> other,BiFunction<? super T,? super U,? extends V> fn);
 public <U,V> CompletionStage<V> thenCombineAsync(CompletionStage<? extends U> other,BiFunction<? super T,? super U,? extends V> fn);
 public <U,V> CompletionStage<V> thenCombineAsync(CompletionStage<? extends U> other,BiFunction<? super T,? super U,? extends V> fn,Executor executor);
@@ -139,7 +139,7 @@ public <U,V> CompletionStage<V> thenCombineAsync(CompletionStage<? extends U> ot
 
 而 `thenAcceptBoth` 跟 `thenCombine` 类似，不同的是它只是消费结果，但没有返回值。
 
-```text
+```
 public <U> CompletionStage<Void> thenAcceptBoth(CompletionStage<? extends U> other,BiConsumer<? super T, ? super U> action);
 public <U> CompletionStage<Void> thenAcceptBothAsync(CompletionStage<? extends U> other,BiConsumer<? super T, ? super U> action);
 public <U> CompletionStage<Void> thenAcceptBothAsync(CompletionStage<? extends U> other,BiConsumer<? super T, ? super U> action,     Executor executor);
@@ -147,7 +147,7 @@ public <U> CompletionStage<Void> thenAcceptBothAsync(CompletionStage<? extends U
 
 `runAfterBoth` 类似，只是不关心上一个任务的返回值：
 
-```text
+```
 public CompletionStage<Void> runAfterBoth(CompletionStage<?> other,Runnable action);
 public CompletionStage<Void> runAfterBothAsync(CompletionStage<?> other,Runnable action);
 public CompletionStage<Void> runAfterBothAsync(CompletionStage<?> other,Runnable action,Executor executor);
@@ -157,7 +157,7 @@ public CompletionStage<Void> runAfterBothAsync(CompletionStage<?> other,Runnable
 
 使用 `applyToEither` 方法的作用是：两个`CompletionStage`，谁执行返回的结果快，我就用那个`CompletionStage`的结果进行下一步的转化操作。
 
-```text
+```
 public <U> CompletionStage<U> applyToEither(CompletionStage<? extends T> other,Function<? super T, U> fn);
 public <U> CompletionStage<U> applyToEitherAsync(CompletionStage<? extends T> other,Function<? super T, U> fn);
 public <U> CompletionStage<U> applyToEitherAsync(CompletionStage<? extends T> other,Function<? super T, U> fn,Executor executor);
@@ -165,7 +165,7 @@ public <U> CompletionStage<U> applyToEitherAsync(CompletionStage<? extends T> ot
 
 同样，它也有对应的**只是消费**的方法 `acceptEither`：
 
-```text
+```
 public CompletionStage<Void> acceptEither(CompletionStage<? extends T> other,Consumer<? super T> action);
 public CompletionStage<Void> acceptEitherAsync(CompletionStage<? extends T> other,Consumer<? super T> action);
 public CompletionStage<Void> acceptEitherAsync(CompletionStage<? extends T> other,Consumer<? super T> action,Executor executor);
@@ -173,7 +173,7 @@ public CompletionStage<Void> acceptEitherAsync(CompletionStage<? extends T> othe
 
 也有**不关心上一个任务的返回值**，任意一个任务跑完了都会执行下一步操作的：
 
-```text
+```
 public CompletionStage<Void> runAfterEither(CompletionStage<?> other,Runnable action);
 public CompletionStage<Void> runAfterEitherAsync(CompletionStage<?> other,Runnable action);
 public CompletionStage<Void> runAfterEitherAsync(CompletionStage<?> other,Runnable action,Executor executor);
@@ -187,4 +187,3 @@ public CompletionStage<Void> runAfterEitherAsync(CompletionStage<?> other,Runnab
 * 不关心之前结果的，都是`run`
 * 看哪个跑得快，就是`either`
 * 两个都要跑完，就是`both`
-
