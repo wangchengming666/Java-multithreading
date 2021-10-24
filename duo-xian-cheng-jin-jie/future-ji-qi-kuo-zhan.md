@@ -67,7 +67,7 @@ public static CompletableFuture<Object> anyOf(CompletableFuture<?>... cfs);
 
 #### 计算结果完成时的回调方法
 
-当`CompletableFuture`的计算结果完成，或者抛出异常的时候，可以执行特定的`Action`：
+当`CompletableFuture`的计算结果完成，或者抛出异常的时候，可以执行特定的`Action`
 
 ```
 public CompletableFuture<T> whenComplete(BiConsumer<? super T,? super Throwable> action);
