@@ -14,7 +14,7 @@
 
 AQS内部使用了一个volatile的变量state来作为资源的标识。同时定义了几个获取和修改state的protected方法，子类可以覆盖这些方法来实现自己的逻辑：
 
-```text
+```
 /**
 * The synchronization state.
  */
@@ -35,7 +35,7 @@ protected final boolean compareAndSetState(int expect, int update) {
 }
 ```
 
-这三种叫做均是原子操作，其中compareAndSetState的实现依赖于Unsafe的compareAndSwapInt\(\)方法。
+这三种叫做均是原子操作，其中compareAndSetState的实现依赖于Unsafe的compareAndSwapInt()方法。
 
 而AQS类本身实现的是一些排队和阻塞的机制，比如具体线程等待队列的维护（如获取资源失败入队/唤醒出队等）。它内部使用了一个先进先出（FIFO）的双端队列，并使用了两个指针head和tail用于标识队列的头部和尾部。
 
@@ -58,7 +58,7 @@ protected final boolean compareAndSetState(int expect, int update) {
 
 AQS中关于这两种资源共享模式的定义源码（均在内部类Node中）。我们来看看Node的结构：
 
-```text
+```
 static final class Node {
     // 标记一个结点（对应的线程）在共享模式下等待
     static final Node SHARED = new Node();
@@ -103,35 +103,35 @@ private Node addWaiter(Node mode) {
 }
 ```
 
-> 注意：通过Node我们可以实现两个队列，一是通过prev和next实现CLH队列\(线程同步队列,双向队列\)，二是nextWaiter实现Condition条件上的等待线程队列\(单向队列\)，这个Condition主要用在ReentrantLock类中。
+> 注意：通过Node我们可以实现两个队列，一是通过prev和next实现CLH队列(线程同步队列,双向队列)，二是nextWaiter实现Condition条件上的等待线程队列(单向队列)，这个Condition主要用在ReentrantLock类中。
 
 **AQS的主要方法源码解析**
 
 AQS的设计是基于**模板方法模式**的，它有一些方法必须要子类去实现的，它们主要有：
 
-* isHeldExclusively\(\)：该线程是否正在独占资源。只有用到condition才需要去实现它。
-* tryAcquire\(int\)：独占方式。尝试获取资源，成功则返回true，失败则返回false。
-* tryRelease\(int\)：独占方式。尝试释放资源，成功则返回true，失败则返回false。
-* tryAcquireShared\(int\)：共享方式。尝试获取资源。负数表示失败；0表示成功，但没有剩余可用资源；正数表示成功，且有剩余资源。
-* tryReleaseShared\(int\)：共享方式。尝试释放资源，如果释放后允许唤醒后续等待结点返回true，否则返回false。
+* isHeldExclusively()：该线程是否正在独占资源。只有用到condition才需要去实现它。
+* tryAcquire(int)：独占方式。尝试获取资源，成功则返回true，失败则返回false。
+* tryRelease(int)：独占方式。尝试释放资源，成功则返回true，失败则返回false。
+* tryAcquireShared(int)：共享方式。尝试获取资源。负数表示失败；0表示成功，但没有剩余可用资源；正数表示成功，且有剩余资源。
+* tryReleaseShared(int)：共享方式。尝试释放资源，如果释放后允许唤醒后续等待结点返回true，否则返回false。
 
 这些方法虽然都是`protected`方法，但是它们并没有在AQS具体实现，而是直接抛出异常：
 
-```text
+```
 protected boolean tryAcquire(int arg) {
     throw new UnsupportedOperationException();
 }
 ```
 
-而AQS实现了一系列主要的逻辑。以ReentrantLock为例，state初始化为0，表示未锁定状态。A线程lock\(\)时，会调用tryAcquire\(\)独占该锁并将state+1。此后，其他线程再tryAcquire\(\)时就会失败，直到A线程unlock\(\)到state=0（即释放锁）为止，其它线程才有机会获取该锁。当然，释放锁之前，A线程自己是可以重复获取此锁的（state会累加），这就是可重入的概念。但要注意，获取多少次就要释放多么次，这样才能保证state是能回到零态的。
+而AQS实现了一系列主要的逻辑。以ReentrantLock为例，state初始化为0，表示未锁定状态。A线程lock()时，会调用tryAcquire()独占该锁并将state+1。此后，其他线程再tryAcquire()时就会失败，直到A线程unlock()到state=0（即释放锁）为止，其它线程才有机会获取该锁。当然，释放锁之前，A线程自己是可以重复获取此锁的（state会累加），这就是可重入的概念。但要注意，获取多少次就要释放多么次，这样才能保证state是能回到零态的。
 
 下面我们从源码来分析一下获取和释放资源的主要逻辑：
 
 **获取资源**
 
-获取资源的入口是acquire\(int arg\)方法。arg是要获取的资源的个数，在独占模式下始终为1。我们先来看看这个方法的逻辑：
+获取资源的入口是acquire(int arg)方法。arg是要获取的资源的个数，在独占模式下始终为1。我们先来看看这个方法的逻辑：
 
-```text
+```
 public final void acquire(int arg) {
     if (!tryAcquire(arg) &&
         acquireQueued(addWaiter(Node.EXCLUSIVE), arg))
@@ -139,11 +139,11 @@ public final void acquire(int arg) {
 }
 ```
 
-首先调用tryAcquire\(arg\)尝试去获取资源。前面提到了这个方法是在子类具体实现的。
+首先调用tryAcquire(arg)尝试去获取资源。前面提到了这个方法是在子类具体实现的。
 
-如果获取资源失败，就通过addWaiter\(Node.EXCLUSIVE\)方法把这个线程插入到等待队列中。其中传入的参数代表要插入的Node是独占式的。这个方法的具体实现：
+如果获取资源失败，就通过addWaiter(Node.EXCLUSIVE)方法把这个线程插入到等待队列中。其中传入的参数代表要插入的Node是独占式的。这个方法的具体实现：
 
-```text
+```
 private Node addWaiter(Node mode) {
     // 生成该线程对应的Node节点
     Node node = new Node(Thread.currentThread(), mode);
@@ -182,9 +182,9 @@ private Node enq(final Node node) {
 
 > 上面的两个函数比较好理解，就是在队列的尾部插入新的Node节点，但是需要注意的是由于AQS中会存在多个线程同时争夺资源的情况，因此肯定会出现多个线程同时插入节点的操作，在这里是通过CAS自旋的方式保证了操作的线程安全性。
 
-OK，现在回到最开始的aquire\(int arg\)方法。现在通过addWaiter方法，已经把一个Node放到等待队列尾部了。而处于等待队列的结点是从头结点一个一个去获取资源的。具体的实现我们来看看acquireQueued方法
+OK，现在回到最开始的aquire(int arg)方法。现在通过addWaiter方法，已经把一个Node放到等待队列尾部了。而处于等待队列的结点是从头结点一个一个去获取资源的。具体的实现我们来看看acquireQueued方法
 
-```text
+```
 final boolean acquireQueued(final Node node, int arg) {
     boolean failed = true;
     try {
@@ -213,12 +213,12 @@ final boolean acquireQueued(final Node node, int arg) {
 }
 ```
 
-> 这里parkAndCheckInterrupt方法内部使用到了LockSupport.park\(this\)，顺便简单介绍一下park。
+> 这里parkAndCheckInterrupt方法内部使用到了LockSupport.park(this)，顺便简单介绍一下park。
 >
 > LockSupport类是Java 6 引入的一个类，提供了基本的线程同步原语。LockSupport实际上是调用了Unsafe类里的函数，归结到Unsafe里，只有两个函数：
 >
-> * park\(boolean isAbsolute, long time\)：阻塞当前线程
-> * unpark\(Thread jthread\)：使给定的线程停止阻塞
+> * park(boolean isAbsolute, long time)：阻塞当前线程
+> * unpark(Thread jthread)：使给定的线程停止阻塞
 
 所以**结点进入等待队列后，是调用park使它进入阻塞状态的。只有头结点的线程是处于活跃状态的**。
 
@@ -230,11 +230,11 @@ final boolean acquireQueued(final Node node, int arg) {
 
 > 可中断的意思是，在线程中断时可能会抛出`InterruptedException`
 
- **释放资源**
+&#x20;**释放资源**
 
 释放资源相比于获取资源来说，会简单许多。在AQS中只有一小段实现。源码：
 
-```text
+```
 public final boolean release(int arg) {
     if (tryRelease(arg)) {
         Node h = head;
@@ -267,7 +267,15 @@ private void unparkSuccessor(Node node) {
 }
 ```
 
+****
+
+#### **公平锁和非公平锁的区别**
+
+1. 非公平锁在调用 lock 后，首先就会调用 CAS 进行一次抢锁，如果这个时候恰巧锁没有被占用，那么直接就获取到锁返回了。
+2. 非公平锁在 CAS 失败后，和公平锁一样都会进入到 tryAcquire 方法，在 tryAcquire 方法中，如果发现锁这个时候被释放了（state == 0），非公平锁会直接 CAS 抢锁，但是公平锁会判断等待队列是否有线程处于等待状态，如果有则不去抢锁，乖乖排到后面。
+
+公平锁和非公平锁就这两点区别，如果这两次 CAS 都不成功，那么后面非公平锁和公平锁是一样的，都要进入到阻塞队列等待唤醒。相对来说，非公平锁会有更好的性能，因为它的吞吐量比较大。当然，非公平锁让获取锁的时间变得更加不确定，可能会导致在阻塞队列中的线程长期处于饥饿状态。
+
 **参考资料**
 
 [Java技术之AQS详解](https://www.jianshu.com/p/da9d051dcc3d)
-
