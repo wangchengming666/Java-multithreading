@@ -1,8 +1,8 @@
 # ReentrantLock和Condition
 
-Java在`java.util.concurrent.locks`包下，还为我们提供了几个关于锁的类和接口，相对于`synchronized`它们有更强大的功能或更高的性能。 
+Java在`java.util.concurrent.locks`包下，还为我们提供了几个关于锁的类和接口，相对于`synchronized`它们有更强大的功能或更高的性能。&#x20;
 
-![&#x5728;&#x8FD9;&#x91CC;&#x63D2;&#x5165;&#x56FE;&#x7247;&#x63CF;&#x8FF0;](https://img-blog.csdnimg.cn/20200319152940625.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3dhbmdjaGVuZ21pbmcx,size_16,color_FFFFFF,t_70)
+![在这里插入图片描述](https://img-blog.csdnimg.cn/20200319152940625.png?x-oss-process=image/watermark,type\_ZmFuZ3poZW5naGVpdGk,shadow\_10,text\_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3dhbmdjaGVuZ21pbmcx,size\_16,color\_FFFFFF,t\_70)
 
 **锁的分类**
 
@@ -34,11 +34,11 @@ Java在`java.util.concurrent.locks`包下，还为我们提供了几个关于锁
 
 ReentrantLock是一个非抽象类，它是Lock接口的JDK默认实现，实现了锁的基本功能。从名字上看，它是一个"可重入"锁，从源码上看，它内部有一个抽象类`Sync`，是继承了`AQS`，自己实现的一个同步器。同时，ReentrantLock内部有两个非抽象类NonfairSync和FairSync，它们都继承了Sync。从名字上看得出，分别是”非公平同步器“和”公平同步器“的意思。这意味着ReentrantLock可以支持”公平锁“和”非公平锁“。
 
-通过看着两个同步器的源码可以发现，它们的实现都是”独占“的。都调用了AOS的setExclusiveOwnerThread方法，所以ReentrantLock的锁的”独占“的，也就是说，它的锁都是”排他锁“，不能共享。
+通过看着两个同步器的源码可以发现，它们的实现都是”独占“的。都调用了AOS的`setExclusiveOwnerThread`方法，所以`ReentrantLock`的锁的”独占“的，也就是说，它的锁都是”排他锁“，不能共享。
 
-在ReentrantLock的构造方法里，可以传入一个boolean类型的参数，来指定它是否是一个公平锁，默认情况下是非公平的。这个参数一旦实例化后就不能修改，只能通过isFair\(\)方法来查看。
+在ReentrantLock的构造方法里，可以传入一个boolean类型的参数，来指定它是否是一个公平锁，默认情况下是非公平的。这个参数一旦实例化后就不能修改，只能通过isFair()方法来查看。
 
-```text
+```
    //获取锁，获取不到lock就不罢休，不可被打断,即使当前线程被中断，线程也一直阻塞，直到拿到锁， 比较无赖的做法。
     void lock();
 
@@ -64,7 +64,7 @@ ReentrantLock是一个非抽象类，它是Lock接口的JDK默认实现，实现
 
 通常的使用方法如下：
 
-```text
+```
     private static void test() {
         ReentrantLock lock = new ReentrantLock();
         Thread thread1 = new Thread(() -> {
@@ -84,9 +84,9 @@ ReentrantLock是一个非抽象类，它是Lock接口的JDK默认实现，实现
 **Condition接口**
 
 * 提供了类似Object监视器的方法，通过与Lock配合来实现等待/通知模式。（可以代替`Object`的`wait`/`notify`），Condition和Object的wait/notify基本相似。
-* Condition的signal/signalAll方法则对应Object的notify/notifyAll\(\)。
+* Condition的signal/signalAll方法则对应Object的notify/notifyAll()。
 
-```text
+```
 public interface Condition {
     /**
     *Condition线程进入阻塞状态,调用signal()或者signalAll()再次唤醒，
@@ -118,7 +118,7 @@ public interface Condition {
 
 * 生产者-消费者模型的交替打印英文字母和数字
 
-```text
+```
 private static void alternateTask() {
         ReentrantLock lock = new ReentrantLock();
         Condition condition1 = lock.newCondition();
@@ -158,7 +158,7 @@ private static void alternateTask() {
 
 输出结果：
 
-```text
+```
 ----------thread1------- A
 ----------thread2------- 0
 ----------thread1------- B
@@ -214,4 +214,3 @@ private static void alternateTask() {
 
 Process finished with exit code 0
 ```
-
