@@ -1,12 +1,12 @@
 # 并发容器之ConcurrentHashMap
 
-我们知道在java.util包下提供了一些容器类，而Vector和HashTable是线程安全的容器类，但是这些容器实现同步的方式是通过对方法加锁\(sychronized\)方式实现的，这样读写均需要锁操作，导致性能低下。
+我们知道在java.util包下提供了一些容器类，而Vector和HashTable是线程安全的容器类，但是这些容器实现同步的方式是通过对方法加锁(sychronized)方式实现的，这样读写均需要锁操作，导致性能低下。
 
 **ConcurrentMap接口**
 
 ConcurrentMap接口继承了Map接口，在Map接口的基础上又定义了四个方法：
 
-```text
+```
 public interface ConcurrentMap<K, V> extends Map<K, V> {
 
     //插入元素，与原有put方法不同的是，putIfAbsent方法中如果插入的key相同，则不替换原有的value值；
@@ -27,21 +27,21 @@ public interface ConcurrentMap<K, V> extends Map<K, V> {
 
 ConcurrentHashMap同HashMap一样也是基于散列表的map，但是它提供了一种与HashTable完全不同的加锁策略提供更高效的并发性和伸缩性。
 
-在JDK 1.7中ConcurrentHashMap提供了一种粒度更细的加锁机制来实现在多线程下更高的性能，这种机制叫分段锁\(Lock Striping\)。
+在JDK 1.7中ConcurrentHashMap提供了一种粒度更细的加锁机制来实现在多线程下更高的性能，这种机制叫分段锁(Lock Striping)。
 
 提供的优点是：在并发环境下将实现更高的吞吐量，而在单线程环境下只损失非常小的性能。
 
 可以这样理解分段锁，就是将数据分段，对每一段数据分配一把锁。当一个线程占用锁访问其中一个段数据的时候，其他段的数据也能被其他线程访问。
 
-有些方法需要跨段，比如size\(\)、isEmpty\(\)、containsValue\(\)，它们可能需要锁定整个表而而不仅仅是某个段，这需要按顺序锁定所有段，操作完毕后，又按顺序释放所有段的锁。
+有些方法需要跨段，比如size()、isEmpty()、containsValue()，它们可能需要锁定整个表而而不仅仅是某个段，这需要按顺序锁定所有段，操作完毕后，又按顺序释放所有段的锁。
 
 ConcurrentHashMap是由Segment数组结构和HashEntry数组结构组成。Segment是一种可重入锁ReentrantLock，HashEntry则用于存储键值对数据。
 
-一个ConcurrentHashMap里包含一个Segment数组，Segment的结构和HashMap类似，是一种数组和链表结构， 一个Segment里包含一个HashEntry数组，每个HashEntry是一个链表结构（同HashMap一样，它也会在长度达到8的时候转化为红黑树）的元素， 每个Segment守护者一个HashEntry数组里的元素，当对HashEntry数组的数据进行修改时，必须首先获得它对应的Segment锁。
+一个ConcurrentHashMap里包含一个`Segment`数组，`Segment`的结构和HashMap类似，是一种数组和链表结构， 一个Segment里包含一个HashEntry数组，每个HashEntry是一个链表结构（同HashMap一样，它也会在长度达到8的时候转化为红黑树）的元素， 每个Segment守护者一个HashEntry数组里的元素，当对HashEntry数组的数据进行修改时，必须首先获得它对应的Segment锁。
 
 **ConcurrentHashMap的put过程，基于JDK1.8**
 
-```text
+```
 public V put(K key, V value) {
         return putVal(key, value, false);
     }
@@ -145,7 +145,7 @@ public V put(K key, V value) {
 
 总结一下put的过程：
 
-1. 先检查key和value都不能为空，如果为空，就抛出空指针异常； 
+1. 先检查key和value都不能为空，如果为空，就抛出空指针异常；&#x20;
 2. 对key再哈希，防止用户自己写的哈希算法导致分布不均匀；
 3. 检查是否已经进行了初始化，如果没有，要先初始化；
 4. 根据再hash的值，计算在table上的位置的第一个结点f，如果f为空，用CAS直接插入；否则，进行第5步；
@@ -158,4 +158,3 @@ public V put(K key, V value) {
 11. 调用红黑树的putTreeVal方法，其内部是使用CAS，也会判断key是否已经存在并返回旧值；
 12. 如果是保留的Node类型ReservationNode，直接抛出异常；
 13. 根据binCount判断是否达到链表转红黑树的阈值，如果达到了，转成红黑树，这个过程会以根节点为锁；
-
