@@ -6,7 +6,7 @@
 
 这里面有两把锁，一把读锁，用来处理读相关的操作；一把写锁，用来处理写相关的操作。
 
-```text
+```
 public interface ReadWriteLock {
     /**
      * Returns the lock used for reading.
@@ -28,20 +28,26 @@ public interface ReadWriteLock {
 
 这个类也是一个非抽象类，它是`ReadWriteLock`接口的JDK默认实现。它与ReentrantLock的功能类似，同样是可重入的，支持非公平锁和公平锁。不同的是，它还支持”读写锁“。
 
-```text
+```
 // 内部结构
 private final ReentrantReadWriteLock.ReadLock readerLock;
+
 private final ReentrantReadWriteLock.WriteLock writerLock;
+
 final Sync sync;
+
 abstract static class Sync extends AbstractQueuedSynchronizer {
     // 具体实现
 }
+
 static final class NonfairSync extends Sync {
     // 具体实现
 }
+
 static final class FairSync extends Sync {
     // 具体实现
 }
+
 public static class ReadLock implements Lock, java.io.Serializable {
     private final Sync sync;
     protected ReadLock(ReentrantReadWriteLock lock) {
@@ -49,6 +55,7 @@ public static class ReadLock implements Lock, java.io.Serializable {
     }
     // 具体实现
 }
+
 public static class WriteLock implements Lock, java.io.Serializable {
     private final Sync sync;
     protected WriteLock(ReentrantReadWriteLock lock) {
@@ -66,12 +73,13 @@ public ReentrantReadWriteLock(boolean fair) {
 
 // 获取读锁和写锁的方法
 public ReentrantReadWriteLock.WriteLock writeLock() { return writerLock; }
+
 public ReentrantReadWriteLock.ReadLock  readLock()  { return readerLock; }
 ```
 
 **读读共享**
 
-```text
+```
 public class MyTask {
 
     private ReentrantReadWriteLock lock = new ReentrantReadWriteLock();
@@ -119,7 +127,7 @@ public class ReadReadTest {
 
 输出结果：
 
-```text
+```
 t2 start
 t1 start
 t1 end
@@ -128,9 +136,9 @@ t2 end
 
 **写写互斥**
 
-在同一时间只允许一个线程执行lock\(\)方法后面的代码。
+在同一时间只允许一个线程执行lock()方法后面的代码。
 
-```text
+```
 public class MyTask {
 
     private ReentrantReadWriteLock lock = new ReentrantReadWriteLock();
@@ -178,7 +186,7 @@ public class ReadReadTest {
 
 输出结果：
 
-```text
+```
 t1 start
 t1 end
 t2 start
@@ -187,7 +195,7 @@ t2 end
 
 **读写互斥**
 
-```text
+```
 public class MyTask {
 
     private ReentrantReadWriteLock lock = new ReentrantReadWriteLock();
@@ -255,7 +263,7 @@ public class ReadReadTest {
 
 输出结果：
 
-```text
+```
 t1 start
 t1 end
 t2 start
@@ -264,7 +272,7 @@ t2 end
 
 **写读互斥**
 
-```text
+```
 public class ReadReadTest {
 
     public static void main(String[] args) {
@@ -301,7 +309,7 @@ public class ReadReadTest {
 
 输出结果：
 
-```text
+```
 t1 start
 t1 end
 t2 start
@@ -311,4 +319,3 @@ t2 end
 **总结**
 
 读操作的锁叫共享锁，写操作的锁叫排他锁。就是遇见写锁就需互斥。那么以此可得出读读共享，写写互斥，读写互斥，写读互斥。
-
