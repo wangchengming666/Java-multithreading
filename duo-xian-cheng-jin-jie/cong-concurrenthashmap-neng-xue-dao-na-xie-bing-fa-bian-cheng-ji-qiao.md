@@ -6,7 +6,7 @@
 
 **使用volatile进行通信**
 
-在ConcurrentHashMap中有一个很重要的属性是`sizeCtl`它被用于初始化和扩容的过程中。且不同阶段它的值有不同的含义。比如在扩容阶段，它是一个负数，绝对值就代表了参与扩容的线程的数量。它是一个`volatile`变量，定义如下：
+在`ConcurrentHashMap`中有一个很重要的属性是`sizeCtl`它被用于初始化和扩容的过程中。且不同阶段它的值有不同的含义。比如在扩容阶段，它是一个负数，绝对值就代表了参与扩容的线程的数量。它是一个`volatile`变量，定义如下：
 
 ```
 private transient volatile int sizeCtl;
