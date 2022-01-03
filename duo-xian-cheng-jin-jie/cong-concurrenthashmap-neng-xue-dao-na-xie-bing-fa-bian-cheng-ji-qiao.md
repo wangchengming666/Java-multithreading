@@ -36,7 +36,7 @@ CAS也是一种“无锁编程”的思想。在可预测的较小的粒度下�
 
 **尽量减小锁的粒度**
 
-在面试中，可能经常会问到这个问题：`HashMap`, `HashTable`, `ConcurrentHashMap`有什么区别？稍微有点经验的人都能回答：“HashMap是线程不安全的，另外两个都是线程安全的，其中HashTable是在每个方法上使用了synchronized关键字，而ConcurrentHashMap使用了更小粒度的锁，ConcurrentHashMap在并发场景下性能更好。”
+在面试中，可能经常会问到这个问题：`HashMap`, `HashTable`, `ConcurrentHashMap`有什么区别？稍微有点经验的人都能回答：“`HashMap`是线程不安全的，另外两个都是线程安全的，其中HashTable是在每个方法上使用了`synchronized`关键字，而`ConcurrentHashMap`使用了更小粒度的锁，`ConcurrentHashMap`在并发场景下性能更好。”
 
 是的，ConcurrentHashMap为了提升性能，在JDK 1.7中使用了“分段锁”的概念，其核心思想是只锁住某一段，这样就不会影响其他段的数据，其它线程就可以并行地操作其它段的数据。“段”虽然相较于HashTable的整个实体来说，锁粒度有所降低，但仍然是一个较粗的粒度。
 
