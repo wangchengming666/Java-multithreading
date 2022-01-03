@@ -25,7 +25,7 @@ public interface ConcurrentMap<K, V> extends Map<K, V> {
 
 **ConcurrentHashMap类**
 
-ConcurrentHashMap同HashMap一样也是基于散列表的map，但是它提供了一种与HashTable完全不同的加锁策略提供更高效的并发性和伸缩性。
+`ConcurrentHashMap`同`HashMap`一样也是基于散列表的map，但是它提供了一种与HashTable完全不同的加锁策略提供更高效的并发性和伸缩性。
 
 在JDK 1.7中ConcurrentHashMap提供了一种粒度更细的加锁机制来实现在多线程下更高的性能，这种机制叫分段锁(Lock Striping)。
 
