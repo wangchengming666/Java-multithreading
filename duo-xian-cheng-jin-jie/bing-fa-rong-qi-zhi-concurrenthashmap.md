@@ -4,7 +4,7 @@
 
 **ConcurrentMap接口**
 
-ConcurrentMap接口继承了Map接口，在Map接口的基础上又定义了四个方法：
+`ConcurrentMap`接口继承了Map接口，在Map接口的基础上又定义了四个方法：
 
 ```
 public interface ConcurrentMap<K, V> extends Map<K, V> {
