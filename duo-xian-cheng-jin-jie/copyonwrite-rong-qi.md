@@ -8,7 +8,7 @@
 
 `CopyOnWrite`容器即**写时复制的容器**,当我们往一个容器中添加元素的时候，不直接往容器中添加，而是将当前容器进行copy，复制出来一个新的容器，然后向新容器中添加我们需要的元素，最后将原容器的引用指向新容器。
 
-这样做的好处在于，我们可以在并发的场景下对容器进行"读操作"而不需要"加锁"，从而达到读写分离的目的。从JDK 1.5 开始Java并发包里提供了两个使用CopyOnWrite机制实现的并发容器 ，分别是`CopyOnWriteArrayList`和CopyOnWriteArraySet 。这里着重给大家介绍一下CopyOnWriteArrayList。
+这样做的好处在于，我们可以在并发的场景下对容器进行"读操作"而不需要"加锁"，从而达到读写分离的目的。从JDK 1.5 开始Java并发包里提供了两个使用`CopyOnWrite`机制实现的并发容器 ，分别是`CopyOnWriteArrayList`和`CopyOnWriteArraySet` 。这里着重给大家介绍一下`CopyOnWriteArrayList`。
 
 **CopyOnWriteArrayList**
 
