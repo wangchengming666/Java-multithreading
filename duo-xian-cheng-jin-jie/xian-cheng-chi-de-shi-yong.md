@@ -94,7 +94,7 @@ public ThreadPoolExecutor(int corePoolSize,
     > 延迟队列，该队列中的元素只有当其指定的延迟时间到了，才能够从队列中获取到该元素 。
 * 线程池主要的任务处理流程
 
-处理任务的核心方法是execute，我们看看 JDK 1.8 源码中ThreadPoolExecutor是如何处理线程任务的：
+处理任务的核心方法是execute，我们看看 JDK 1.8 源码中`ThreadPoolExecutor`是如何处理线程任务的：
 
 ```
 public void execute(Runnable command) {
