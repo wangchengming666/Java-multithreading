@@ -75,7 +75,7 @@ public E remove(int index) {
     }
 ```
 
-我们再来看看CopyOnWriteArrayList效率最高的读操作的源码
+我们再来看看`CopyOnWriteArrayList`效率最高的读操作的源码
 
 ```
  public E get(int index) {
