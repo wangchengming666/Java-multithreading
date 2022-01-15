@@ -2,11 +2,11 @@
 
 **CountDownLatch介绍**
 
-先来解读一下CountDownLatch这个类名字的意义。CountDown代表计数递减，Latch是“门闩”的意思。也有人把它称为“屏障”。而CountDownLatch这个类的作用也很贴合这个名字的意义，假设某个线程在执行任务之前，需要等待其它线程完成一些前置任务，必须等所有的前置任务都完成，才能开始执行本线程的任务。
+先来解读一下`CountDownLatch`这个类名字的意义。`CountDown`代表计数递减，Latch是“门闩”的意思。也有人把它称为“屏障”。而CountDownLatch这个类的作用也很贴合这个名字的意义，假设某个线程在执行任务之前，需要等待其它线程完成一些前置任务，必须等所有的前置任务都完成，才能开始执行本线程的任务。
 
 CountDownLatch的方法也很简单，如下：
 
-```text
+```
 // 构造方法：
 public CountDownLatch(int count)
 
@@ -20,7 +20,7 @@ public long getCount() // 获取当前还有多少count
 
 我们知道，玩游戏的时候，在游戏真正开始之前，一般会等待一些前置任务完成，比如“加载地图数据”，“加载人物模型”，“加载背景音乐”等等。只有当所有的东西都加载完成后，玩家才能真正进入游戏。下面我们就来模拟一下这个demo。
 
-```text
+```
 public class PhaserDemo {
     static class PreTaskThread implements Runnable {
 
@@ -78,7 +78,7 @@ public class PhaserDemo {
 
 输出：
 
-```text
+```
 关卡1，需要加载4个模块，当前模块【加载背景音乐】
 关卡1，需要加载4个模块，当前模块【加载新手教程】
 下次关卡移除加载【新手教程】模块
@@ -98,4 +98,3 @@ public class PhaserDemo {
 **Phaser原理**
 
 请各位看官移步[这里](https://www.jianshu.com/p/a9a713cba61a)
-
