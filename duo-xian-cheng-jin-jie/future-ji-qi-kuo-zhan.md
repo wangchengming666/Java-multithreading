@@ -2,7 +2,7 @@
 
 今天这里主要介绍`CompetableFuture`类，因为它是JDK自带的，相比于`RxJava`项目来说也比较轻量。功能也比较齐全，基本上满足绝大多数的异步编程需求。
 
-先看一下使用线程池的submit方法是怎么写的，它底层是使用的`FutureTask`
+先看一下使用线程池的`submit`方法是怎么写的，它底层是使用的`FutureTask`
 
 ```
 // 定义一个线程池并让它执行一个异步任务
@@ -52,7 +52,7 @@ CompletableFuture<Integer> completableFuture = CompletableFuture.supplyAsync(() 
 
 #### 创建异步任务
 
-`CompletableFuture` 提供了四个静态方法来创建一个异步任务。如果没有指定`Executor`的方法会使用ForkJoinPool.commonPool() 作为它的线程池执行异步代码。如果指定线程池，则使用指定的线程池运行。以下所有的方法都类同。
+`CompletableFuture` 提供了四个静态方法来创建一个异步任务。如果没有指定`Executor`的方法会使用`ForkJoinPool.commonPool()` 作为它的线程池执行异步代码。如果指定线程池，则使用指定的线程池运行。以下所有的方法都类同。
 
 ```
 public static CompletableFuture<Void> runAsync(Runnable runnable);
