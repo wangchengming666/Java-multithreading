@@ -1,6 +1,6 @@
 # Future及其扩展
 
-今天这里主要介绍`CompetableFuture`类，因为它是JDK自带的，相比于RxJava项目来说也比较轻量。功能也比较齐全，基本上满足绝大多数的异步编程需求。
+今天这里主要介绍`CompetableFuture`类，因为它是JDK自带的，相比于`RxJava`项目来说也比较轻量。功能也比较齐全，基本上满足绝大多数的异步编程需求。
 
 先看一下使用线程池的submit方法是怎么写的，它底层是使用的`FutureTask`
 
