@@ -1,10 +1,10 @@
 # Thread类和Runnable接口
 
-如果我们需要有一个“线程”类，JDK提供了`Thread`类和`Runnalble`接口来让我们实现自己的“线程”类。
+如果我们需要有一个“线程”类，JDK提供了`Thread`类和`Runnalble`接口来让我们实现自己的"线程"类。
 
-* 继承Thread类，并重写run方法（注意：Thread类实现了Runnable接口）
+* 继承`Thread`类，并重写`run`方法（注意：`Thread`类实现了`Runnable`接口）
 
-```text
+```
 public class Thread implements Runnable {}
 ```
 
@@ -12,7 +12,7 @@ public class Thread implements Runnable {}
 
 **继承Thread类**
 
-```text
+```
     static class MyThread extends Thread {
         @Override
         public void run() {
@@ -31,7 +31,7 @@ public class Thread implements Runnable {}
 
 **实现Runnable接口**
 
-```text
+```
     static class MyThread1 implements Runnable {
         @Override
         public void run() {
@@ -51,7 +51,7 @@ public class Thread implements Runnable {}
 
 该方法可以可以返回代码段正在被哪个线程调用的信息。实例代码如下：
 
-```text
+```
     public static void main(String[] args) {
          System.out.println(Thread.currentThread().getName());
     }
@@ -59,7 +59,7 @@ public class Thread implements Runnable {}
 
 结果会在控制台打印`main`，证明main方法正在被名字叫main的线程调用。 修改代码如下：
 
-```text
+```
     static class MyThread extends Thread {
 
         public MyThread() {
@@ -79,14 +79,14 @@ public class Thread implements Runnable {}
 
 输出结果如下，证明构造函数是被main线程调用的，而`run()`方法是被名叫“Thread-0”调用的。
 
-```text
+```
 构造方法打印：main
 run方法打印：Thread-0
 ```
 
 再次修改代码如下：
 
-```text
+```
     static class MyThread extends Thread {
 
         public MyThread() {
@@ -115,17 +115,17 @@ run方法打印：Thread-0
 
 输出结果如下，证明两个线程都是被main调用的。
 
-```text
+```
 构造方法打印：main
 run方法打印：main
 ```
 
 * `isAlive()`方法：是判断当前线程是不是出于活动状态
 * `sleep()`方法：静态方法，使当前线程睡眠一段时间
-* `start()`：开始执行线程的方法，java虚拟机会调用线程内的run\(\)方法
-* `yield()`：yield在英语里有放弃的意思，同样，这里的yield\(\)指的是当前线程愿意让出对当前处理器的占用。
+* `start()`：开始执行线程的方法，java虚拟机会调用线程内的run()方法
+* `yield()`：yield在英语里有放弃的意思，同样，这里的yield()指的是当前线程愿意让出对当前处理器的占用。
 
-```text
+```
     static class MyThread extends Thread {
         @Override
         public void run() {
@@ -150,8 +150,8 @@ run方法打印：main
 
 * `Thread.stop()`：暴力停止线程， 不推荐这么做。
 * `Thread.interrupt()`：推荐使用此方法。此方法是在当前线程中打印一个停止的标记，并不是真正的停止线程。
-  * this.interrupted\(\)，测试当前线程是否已经中断，执行后具有将状态标志清除为false的功能
-  * this.isInterrupted\(\)，测试线程Thread对象是否已经是中断状态，但不会清除状态标志
+  * this.interrupted()，测试当前线程是否已经中断，执行后具有将状态标志清除为false的功能
+  * this.isInterrupted()，测试线程Thread对象是否已经是中断状态，但不会清除状态标志
 
 **守护线程**
 
@@ -161,7 +161,7 @@ User Thread（用户线程）和Daemon Thread（守护线程）从本质上来�
 
 首先看下JDK对线程优先级的设置有哪些：
 
-```text
+```
     /**
      * The minimum priority that a thread can have.
      */
@@ -195,4 +195,3 @@ User Thread（用户线程）和Daemon Thread（守护线程）从本质上来�
 
 * [Java中的守护线程](https://www.cnblogs.com/yanggb/p/11702843.html)
 * 《Java多线程编程核心技术》
-
