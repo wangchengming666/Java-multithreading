@@ -77,7 +77,7 @@ public class Thread implements Runnable {}
     }
 ```
 
-输出结果如下，证明构造函数是被main线程调用的，而`run()`方法是被名叫“Thread-0”调用的。
+输出结果如下，证明构造函数是被main线程调用的，而`run()`方法是被名叫"Thread-0"调用的。
 
 ```
 构造方法打印：main
