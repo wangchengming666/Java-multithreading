@@ -8,7 +8,7 @@
 public class Thread implements Runnable {}
 ```
 
-* 实现Runnable接口的run方法
+* 实现`Runnable`接口的`run`方法
 
 **继承Thread类**
 
