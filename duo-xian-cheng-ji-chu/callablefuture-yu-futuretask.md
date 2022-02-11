@@ -6,9 +6,9 @@
 
 **Callable接口**
 
-可以看到`Callable`是一个函数式接口。同时`Callable`是有返回值的，并且支持泛型。
+可以看到Callable是一个函数式接口。同时`Callable`是有返回值的，并且支持泛型。
 
-```text
+```
 @FunctionalInterface
 public interface Callable<V> {
     /**
@@ -23,7 +23,7 @@ public interface Callable<V> {
 
 那一般是怎么使用Callable的呢？Callable一般是配合线程池工具ExecutorService来使用的。这里举例介绍ExecutorService可以使用submit方法来让一个Callable接口执行。它会返回一个Future，我们后续的程序可以通过这个Future的get方法得到结果。
 
-```text
+```
 public class Task implements Callable {
 
     @Override
@@ -46,7 +46,7 @@ public class Task implements Callable {
 
 `Future`和`Callable`有着类似的地方，同样也是支持泛型和有返回结果。 `Future`接口只有几个比较简单的方法：
 
-```text
+```
 public interface Future<V> {
 
     /**
@@ -129,7 +129,7 @@ public interface Future<V> {
 
 `FutureTask`的几个状态：
 
-```text
+```
     /**
      * The run state of this task, initially NEW.  The run state
      * transitions to a terminal state only in methods set,
@@ -160,7 +160,7 @@ public interface Future<V> {
 
 可以看到`FutureTask`是实现了`RunnableFuture`接口的。
 
-```text
+```
 public class FutureTask<V> implements RunnableFuture<V> { }
 ```
 
@@ -168,7 +168,7 @@ public class FutureTask<V> implements RunnableFuture<V> { }
 
 可以看到`RunnableFuture`接口同时继承了`Runnable`接口和`Future`接口
 
-```text
+```
 /**
  * A {@link Future} that is {@link Runnable}. Successful execution of
  * the {@code run} method causes completion of the {@code Future}
@@ -191,11 +191,11 @@ public interface RunnableFuture<V> extends Runnable, Future<V> {
 * 那FutureTask类有什么用？为什么要有一个FutureTask类？前面说到了Future只是一个接口，而它里面的cancel，get，isDone等方法要自己实现起来都是非常复杂的。所以JDK提供了一个FutureTask类来供我们使用。
 * 修改一下上面的代码，改用`FutureTask`
 
-使用上与第一个Demo有一点小的区别。首先，调用submit方法是没有返回值的。这里实际上是调用的submit\(Runnable task\)方法，而上面的Demo，调用的是submit\(Callable task\)方法。
+使用上与第一个Demo有一点小的区别。首先，调用submit方法是没有返回值的。这里实际上是调用的submit(Runnable task)方法，而上面的Demo，调用的是submit(Callable task)方法。
 
 然后，这里是使用FutureTask直接取get取值，而上面的Demo是通过submit方法返回的Future去取值。
 
-```text
+```
 public class Task implements Callable {
 
     @Override
@@ -211,4 +211,3 @@ public class Task implements Callable {
     }
 }
 ```
-
