@@ -6,7 +6,7 @@
 
 **Callable接口**
 
-可以看到Callable是一个函数式接口。同时`Callable`是有返回值的，并且支持泛型。
+可以看到`Callable`是一个函数式接口。同时`Callable`是有返回值的，并且支持泛型。
 
 ```
 @FunctionalInterface
