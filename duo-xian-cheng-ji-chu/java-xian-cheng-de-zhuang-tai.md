@@ -1,10 +1,10 @@
 # Java线程的状态
 
-首先从一张图片来直观的了解一下线程的状态，图片来源于网络。 ![&#x5728;&#x8FD9;&#x91CC;&#x63D2;&#x5165;&#x56FE;&#x7247;&#x63CF;&#x8FF0;](https://img-blog.csdnimg.cn/20200318105953491.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3dhbmdjaGVuZ21pbmcx,size_16,color_FFFFFF,t_70) 
+首先从一张图片来直观的了解一下线程的状态，图片来源于网络。 ![在这里插入图片描述](https://img-blog.csdnimg.cn/20200318105953491.png?x-oss-process=image/watermark,type\_ZmFuZ3poZW5naGVpdGk,shadow\_10,text\_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3dhbmdjaGVuZ21pbmcx,size\_16,color\_FFFFFF,t\_70)&#x20;
 
-然后再看一下`Thread.State`这个枚举类，定义了线程的六种状态。
+然后再看一下Thread.State这个枚举类，定义了线程的六种状态。
 
-```text
+```
 public enum State {
     /**
      * 处于NEW状态的线程此时尚未启动。
@@ -44,11 +44,11 @@ public enum State {
 
 **线程之间的转换**
 
-![](https://img-blog.csdnimg.cn/2020031814324423.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3dhbmdjaGVuZ21pbmcx,size_16,color_FFFFFF,t_70)
+![](https://img-blog.csdnimg.cn/2020031814324423.png?x-oss-process=image/watermark,type\_ZmFuZ3poZW5naGVpdGk,shadow\_10,text\_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3dhbmdjaGVuZ21pbmcx,size\_16,color\_FFFFFF,t\_70)
 
 * BLOCKED与RUNNABLE状态的转换
 
-```text
+```
 public class ThreadState {
 
     public static void main(String[] args) throws InterruptedException {
@@ -88,7 +88,7 @@ public class ThreadState {
 
 输出结果如下：
 
-```text
+```
 a:TIMED_WAITING
 b:BLOCKED
 ```
@@ -97,7 +97,7 @@ b:BLOCKED
 
 使线程从RUNNABLE状态转为WAITING状态可以使用`Object.wait()`，`Thread.join()`方法
 
-```text
+```
 public class ThreadState {
 
     public static void main(String[] args) throws InterruptedException {
@@ -138,7 +138,7 @@ public class ThreadState {
 
 输出结果：
 
-```text
+```
 a:TERMINATED
 b:TIMED_WAITING
 ```
@@ -147,7 +147,6 @@ b:TIMED_WAITING
 
 TIMED\_WAITING与WAITING状态类似，只是TIMED\_WAITING状态等待的时间是指定的。
 
-* Thread.sleep\(long\)：使当前线程睡眠指定时间。需要注意这里的“睡眠”只是暂时使线程停止执行，并不会释放锁。时间到后，线程会重新进入RUNNABLE状态。
-* Object.wait\(long\)：wait\(long\)方法使线程进入TIMED\_WAITING状态。这里的wait\(long\)方法与无参方法wait\(\)相同的地方是，都可以通过其他线程调用notify\(\)或notifyAll\(\)方法来唤醒。不同的地方是，有参方法wait\(long\)就算其他线程不来唤醒它，经过指定时间long之后它会自动唤醒，拥有去争夺锁的资格。
-* Thread.join\(long\)：join\(long\)使当前线程执行指定时间，并且使线程进入TIMED\_WAITING状态。
-
+* Thread.sleep(long)：使当前线程睡眠指定时间。需要注意这里的“睡眠”只是暂时使线程停止执行，并不会释放锁。时间到后，线程会重新进入RUNNABLE状态。
+* Object.wait(long)：wait(long)方法使线程进入TIMED\_WAITING状态。这里的wait(long)方法与无参方法wait()相同的地方是，都可以通过其他线程调用notify()或notifyAll()方法来唤醒。不同的地方是，有参方法wait(long)就算其他线程不来唤醒它，经过指定时间long之后它会自动唤醒，拥有去争夺锁的资格。
+* Thread.join(long)：join(long)使当前线程执行指定时间，并且使线程进入TIMED\_WAITING状态。
