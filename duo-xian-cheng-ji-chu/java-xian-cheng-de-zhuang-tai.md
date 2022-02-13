@@ -2,7 +2,7 @@
 
 首先从一张图片来直观的了解一下线程的状态，图片来源于网络。 ![在这里插入图片描述](https://img-blog.csdnimg.cn/20200318105953491.png?x-oss-process=image/watermark,type\_ZmFuZ3poZW5naGVpdGk,shadow\_10,text\_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3dhbmdjaGVuZ21pbmcx,size\_16,color\_FFFFFF,t\_70)&#x20;
 
-然后再看一下Thread.State这个枚举类，定义了线程的六种状态。
+然后再看一下`Thread.State`这个枚举类，定义了线程的六种状态。
 
 ```
 public enum State {
