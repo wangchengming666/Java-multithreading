@@ -18,7 +18,7 @@
 
 **悲观锁常见的实现方式**
 
-* 使用synchronized
+* 使用`synchronized`
 
 ```
 public synchronized void testMethod() {
