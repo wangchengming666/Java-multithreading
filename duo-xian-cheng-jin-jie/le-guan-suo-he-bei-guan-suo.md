@@ -18,9 +18,9 @@
 
 **悲观锁常见的实现方式**
 
-* 使用`synchronized`
+* 使用synchronized
 
-```text
+```
 public synchronized void testMethod() {
       //操作同步资源 
  }
@@ -28,7 +28,7 @@ public synchronized void testMethod() {
 
 * 使用`Lock`
 
-```text
+```
 Private ReentrantLock lock = new ReentrantLock(); 
 
 Public void modifyPublicResource() {
@@ -48,9 +48,8 @@ Public void modifyPublicResource() {
 
 Java.util.concurrent包中的原子类就是通过CAS实现了乐观锁。
 
-```text
+```
 private AtomicInteger atomicInteger = new AtomicInteger();  
 
 AtomicInteger.incrementAndGet();
 ```
-
