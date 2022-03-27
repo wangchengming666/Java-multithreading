@@ -1,6 +1,6 @@
 # Volatile
 
-在多线程并发编程中 `synchronized` 和 `volatile` 都扮演着重要的角色，`volatile` 是轻量级的 `synchronized`，它在多处理器开发中保证了共享变量的“可见性”。
+在多线程并发编程中 `synchronized` 和 `volatile` 都扮演着重要的角色，volatile 是轻量级的 `synchronized`，它在多处理器开发中保证了共享变量的“可见性”。
 
 **内存可见性**
 
