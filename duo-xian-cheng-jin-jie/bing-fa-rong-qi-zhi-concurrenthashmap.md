@@ -1,6 +1,6 @@
 # 并发容器之ConcurrentHashMap
 
-我们知道在java.util包下提供了一些容器类，而Vector和HashTable是线程安全的容器类，但是这些容器实现同步的方式是通过对方法加锁(sychronized)方式实现的，这样读写均需要锁操作，导致性能低下。
+我们知道在java.util包下提供了一些容器类，而`Vector`和`HashTable`是线程安全的容器类，但是这些容器实现同步的方式是通过对方法加锁(sychronized)方式实现的，这样读写均需要锁操作，导致性能低下。
 
 **ConcurrentMap接口**
 
