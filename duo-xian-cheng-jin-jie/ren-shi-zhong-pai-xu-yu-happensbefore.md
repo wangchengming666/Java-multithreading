@@ -6,25 +6,23 @@
 
 ![](../.gitbook/assets/image.png)
 
-* **编译器优化重排**
+*   **编译器优化重排**
 
-  编译器在**不改变单线程程序语义**的前提下，可以重新安排语句的执行顺序。
+    编译器在**不改变单线程程序语义**的前提下，可以重新安排语句的执行顺序。
+*   **指令并行重排**
 
-* **指令并行重排**
+    现代处理器采用了指令级并行技术来将多条指令重叠执行。如果**不存在数据依赖性**(即后一个执行的语句无需依赖前面执行的语句的结果)，处理器可以改变语句对应的机器指令的执行顺序。
+*   **内存系统重排**
 
-  现代处理器采用了指令级并行技术来将多条指令重叠执行。如果**不存在数据依赖性**\(即后一个执行的语句无需依赖前面执行的语句的结果\)，处理器可以改变语句对应的机器指令的执行顺序。
-
-* **内存系统重排**
-
-  由于处理器使用缓存和读写缓存冲区，这使得加载\(load\)和存储\(store\)操作看上去可能是在乱序执行，因为三级缓存的存在，导致内存与缓存的数据同步存在时间差。
+    由于处理器使用缓存和读写缓存冲区，这使得加载(load)和存储(store)操作看上去可能是在乱序执行，因为三级缓存的存在，导致内存与缓存的数据同步存在时间差。
 
 **指令重排可以保证串行语义一致，但是没有义务保证多线程间的语义也一致**。所以在多线程下，指令重排序可能会导致一些问题，比如乱序问题，但是这点牺牲是值得的。
 
 **什么是as-if-serial?**
 
-as-if-serial语义的意思是：不管怎么重排序（编译器和处理器为了提供并行度），（单线程）程序的执行结果不能被改变。编译器，runtime和处理器都必须遵守as-if-serial语义。as-if-serial语义把单线程程序保护了起来，**遵守as-if-serial语义的编译器，runtime和处理器共同为编写单线程程序的程序员创建了一个幻觉：单线程程序是按程序的顺序来执行的**。
+as-if-serial语义的意思是：不管怎么重排序（编译器和处理器为了提供并行度），（单线程）程序的执行结果不能被改变。编译器，runtime和处理器都必须遵守as-if-serial语义。as-if-serial语义把单线程程序保护了起来，**遵守**as-if-serial**语义的编译器，runtime和处理器共同为编写单线程程序的程序员创建了一个幻觉：单线程程序是按程序的顺序来执行的**。
 
-#### 什么是happens-before? <a id="731-&#x4EC0;&#x4E48;&#x662F;happens-before"></a>
+#### 什么是happens-before? <a href="#731-shi-mo-shi-happensbefore" id="731-shi-mo-shi-happensbefore"></a>
 
 在JMM中，如果一个操作执行的结果需要对另一个操作可见，那么这两个操作之间必须存在**happens-before**关系。**happens-before**原则非常重要，它是判断数据是否存在竞争、线程是否安全的主要依据，依靠这个原则，我们解决在并发环境下两操作之间是否可能存在冲突的所有问题。
 
@@ -45,20 +43,20 @@ as-if-serial语义保证单线程内重排序后的执行结果和程序代码�
 
 总之，**如果操作A happens-before操作B，那么操作A在内存上所做的操作对操作B都是可见的，不管它们在不在一个线程。**
 
-#### happens-before的具体规则 <a id="732-&#x5929;&#x7136;&#x7684;happens-before&#x5173;&#x7CFB;"></a>
+#### happens-before的具体规则 <a href="#732-tian-ran-de-happensbefore-guan-xi" id="732-tian-ran-de-happensbefore-guan-xi"></a>
 
 * 程序顺序规则：一个线程中的每一个操作，happens-before于该线程中的任意后续操作。
 * 监视器锁规则：对一个锁的解锁，happens-before于随后对这个锁的加锁。
 * volatile变量规则：对一个volatile域的写，happens-before于任意后续对这个volatile域的读。
 * 传递性：如果A happens-before B，且B happens-before C，那么A happens-before C。
-* start\(\)规则：如果线程A执行操作ThreadB.start\(\)启动线程B，那么A线程的ThreadB.start\(\)操作happens-before于线程B中的任意操作、
-* join\(\)规则：如果线程A执行操作ThreadB.join\(\)并成功返回，那么线程B中的任意操作happens-before于线程A从ThreadB.join\(\)操作成功返回。
-* 程序中断规则：对线程interrupted\(\)方法的调用先行于被中断线程的代码检测到中断时间的发生。
-* 对象finalize规则：一个对象的初始化完成（构造函数执行结束）先行于发生它的finalize\(\)方法的开始。
+* start()规则：如果线程A执行操作ThreadB.start()启动线程B，那么A线程的ThreadB.start()操作happens-before于线程B中的任意操作、
+* join()规则：如果线程A执行操作ThreadB.join()并成功返回，那么线程B中的任意操作happens-before于线程A从ThreadB.join()操作成功返回。
+* 程序中断规则：对线程interrupted()方法的调用先行于被中断线程的代码检测到中断时间的发生。
+* 对象finalize规则：一个对象的初始化完成（构造函数执行结束）先行于发生它的finalize()方法的开始。
 
 举例：
 
-```text
+```
 int a = 1; // A操作
 int b = 2; // B操作
 int sum = a + b;// C 操作
@@ -67,7 +65,7 @@ System.out.println(sum);
 
 根据以上介绍的happens-before规则，假如只有一个线程，那么不难得出：
 
-```text
+```
 1> A happens-before B 
 2> B happens-before C 
 3> A happens-before C
@@ -81,16 +79,15 @@ System.out.println(sum);
 
 重排序有两类，JMM对这两类重排序有不同的策略：
 
-* 会改变程序执行结果的重排序，比如 A -&gt; C，JMM要求编译器和处理器都禁止这种重排序。
-* 不会改变程序执行结果的重排序，比如 A -&gt; B，JMM对编译器和处理器不做要求，允许这种重排序。
+* 会改变程序执行结果的重排序，比如 A -> C，JMM要求编译器和处理器都禁止这种重排序。
+* 不会改变程序执行结果的重排序，比如 A -> B，JMM对编译器和处理器不做要求，允许这种重排序。
 
 **参考资料**
 
-[JVM\(十一\)Java指令重排序](https://blog.csdn.net/yjp198713/article/details/78839698)
+[JVM(十一)Java指令重排序](https://blog.csdn.net/yjp198713/article/details/78839698)
 
 [深入理解JVM（二）——内存模型、可见性、指令重排序](https://www.cnblogs.com/leefreeman/p/7356030.html)
 
 [JMM——volatile与内存屏障](https://blog.csdn.net/hqq2023623/article/details/51013468)
 
 [并发关键字volatile（重排序和内存屏障）](https://www.jianshu.com/p/ef8de88b1343)
-
