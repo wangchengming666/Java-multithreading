@@ -1,6 +1,6 @@
 # 从ConcurrentHashMap中学到的并发编程技巧
 
-ConcurrentHashMap是Doug Lea所写。它在JDK 1.7中用的是“分段锁”的思想，但在JDK 1.8中几乎重写了一遍，把数据结构简化成与HashMap类似，减小了锁的粒度，大道至简，进一步提升了它在多线程下的性能。
+`ConcurrentHashMap`是Doug Lea所写。它在JDK 1.7中用的是“分段锁”的思想，但在JDK 1.8中几乎重写了一遍，把数据结构简化成与HashMap类似，减小了锁的粒度，大道至简，进一步提升了它在多线程下的性能。
 
 这篇文章主要总结一下在`ConcurrentHashMap`源码学习过程中学到的一些并发编程的思想和技巧。
 
