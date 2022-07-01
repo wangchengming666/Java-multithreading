@@ -91,6 +91,6 @@ public E remove(int index) {
 
 **总结**
 
-CopyOnWrite容器有数据一致性的问题，它只能保证最终数据一致性。
+**CopyOnWrite容器有数据一致性的问题，它只能保证最终数据一致性。**
 
-所以如果我们希望写入的数据马上能准确地读取，请不要使用CopyOnWrite容器。
+**所以如果我们希望写入的数据马上能准确地读取，请不要使用CopyOnWrite容器。**
